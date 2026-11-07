@@ -1,21 +1,18 @@
 /* ==========================================================
    GameX - طبقة الاتصال بقاعدة البيانات (Supabase)
-   ----------------------------------------------------------
-   غيّر القيمتين دول بالبيانات بتاعة مشروعك من:
-   Supabase ← Project Settings ← API
    ========================================================== */
 (function () {
   'use strict';
 
   const SUPABASE_URL = 'https://mnrjvnxwnzkowcshkfxi.supabase.co';
-  const SUPABASE_ANON_KEY = 'Mohamed1111';
+  const SUPABASE_ANON_KEY = 'sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff';
 
   const TABLE = 'games';
   const TOKEN_KEY = 'gamex_token';
   const base = SUPABASE_URL.replace(/\/$/, '');
 
   function configured() {
-    return base.startsWith('https://') && !base.includes('YOUR-PROJECT') && !SUPABASE_ANON_KEY.startsWith('YOUR-');
+    return base.startsWith('https://') && !SUPABASE_ANON_KEY.startsWith('YOUR-');
   }
 
   function needConfig() {
@@ -32,13 +29,15 @@
     return new Error(msg);
   }
 
+  // المفتاح العام دايماً في apikey، و Authorization بيتبعت بس لو الأدمن مسجل دخول
   function headers(extra) {
-    const token = sessionStorage.getItem(TOKEN_KEY) || SUPABASE_ANON_KEY;
-    return Object.assign({
+    const h = {
       apikey: SUPABASE_ANON_KEY,
-      Authorization: 'Bearer ' + token,
       'Content-Type': 'application/json'
-    }, extra || {});
+    };
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (token) h.Authorization = 'Bearer ' + token;
+    return Object.assign(h, extra || {});
   }
 
   // قراءة كل الألعاب (متاحة للزوار)
