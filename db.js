@@ -7,8 +7,8 @@
 (function () {
   'use strict';
 
-  const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
-  const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+  const SUPABASE_URL = 'https://mnrjvnxwnzkowcshkfxi.supabase.co';
+  const SUPABASE_ANON_KEY = 'Mohamed1111';
 
   const TABLE = 'games';
   const TOKEN_KEY = 'gamex_token';
