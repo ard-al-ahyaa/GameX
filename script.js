@@ -431,10 +431,7 @@
   async function init() {
     bindEvents();
     try {
-      const res = await fetch('games.json', { cache: 'no-cache' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      state.games = await res.json();
-      if (!Array.isArray(state.games)) throw new Error('صيغة الملف غير صحيحة');
+      state.games = await window.GameXDB.getGames();
     } catch (err) {
       state.games = [];
       $('#empty').hidden = false;
