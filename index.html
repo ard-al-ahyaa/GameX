@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة</title>
-  <meta name="description" content="GameX موقعك الأول لتحميل ألعاب الكمبيوتر بروابط مباشرة، فيديوهات تشويقية، وتصنيفات واضحة وتحديثات مستمرة.">
+  <meta name="description" content="GameX موقعك لتحميل ألعاب الكمبيوتر بروابط مباشرة، فيديوهات تشويقية، وتصنيفات واضحة وتحديثات مستمرة.">
   <meta name="theme-color" content="#0d1117">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.yourdomain.com/">
@@ -32,13 +32,12 @@
     .splash-logo{font-size:3rem;font-weight:800;animation:pop .8s ease both}
     .splash-logo span,.logo span{color:var(--green)}
     .splash-bar{width:160px;height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:18px}
-    .splash-bar::after{content:"";display:block;height:100%;width:0;background:var(--green);animation:fill 1.6s ease forwards}
+    .splash-bar::after{content:"";display:block;height:100%;width:0;background:var(--green);animation:fill 1.4s ease forwards}
     @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
     @keyframes fill{to{width:100%}}
 
     #progress-bar{position:fixed;top:0;right:0;height:3px;width:0;background:var(--green);z-index:60}
-
-    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none;max-width:90%}
     .toast.show{opacity:1;transform:translate(-50%,0)}
 
     /* الهيدر */
@@ -78,6 +77,7 @@
     .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 26px;min-width:150px}
     .stat strong{display:block;font-size:1.8rem;color:var(--green)}
     .stat span{color:var(--muted);font-size:.9rem}
+    .hero-actions{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 
     .section-title{font-size:1.6rem;margin:50px 0 6px;text-align:center}
     .section-sub{text-align:center;color:var(--muted);margin-bottom:24px}
@@ -88,6 +88,7 @@
     .filters{display:flex;gap:8px;flex-wrap:wrap}
     .chip{background:var(--card);border:1px solid var(--line);color:var(--muted);padding:7px 16px;border-radius:999px;cursor:pointer}
     .chip.active,.chip:hover{border-color:var(--green);color:var(--green)}
+    .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .sort-select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
     .count-info{color:var(--muted);font-size:.9rem;margin-bottom:14px}
     .empty{text-align:center;color:var(--muted);padding:40px 0}
@@ -96,9 +97,13 @@
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
     .game-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer}
     .game-card:hover{transform:translateY(-4px);border-color:var(--green)}
+    .thumb{position:relative}
     .game-card img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--card2)}
+    .fav{position:absolute;top:8px;left:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:1.1rem;cursor:pointer;z-index:2}
+    .fav.on{color:#f87171}
+    .play{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);border-radius:6px;padding:2px 8px;font-size:.8rem}
     .game-card .body{padding:12px 14px 16px}
-    .game-card h3{font-size:1.05rem;margin-bottom:10px}
+    .game-card h3{font-size:1.05rem;margin:8px 0 10px}
     .card-actions{display:flex;gap:8px}
     .card-actions button{flex:1}
 
@@ -110,8 +115,13 @@
     .btn-video{background:var(--card2);color:var(--text);border:1px solid var(--line)}
     .btn-video:hover{border-color:var(--green)}
     .btn-accent{background:var(--accent);color:#fff}
-    .btn-lg{padding:14px 30px;font-size:1.05rem}
+    .btn-ghost{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+    .btn-ghost:hover{border-color:var(--green);color:var(--green)}
+    .btn-lg{padding:16px 30px;font-size:1.15rem;width:100%}
     .btn-sm{padding:8px 12px;font-size:.9rem}
+    .btn.disabled{opacity:.5;pointer-events:none;background:var(--card2);color:var(--muted)}
+    .link-sm{color:var(--muted);font-size:.9rem;text-decoration:underline}
+    .link-sm:hover{color:var(--green)}
 
     /* الخطوات والمميزات */
     .steps{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
@@ -155,28 +165,36 @@
 
     .badge{display:inline-block;background:var(--card2);color:var(--green);padding:3px 12px;border-radius:999px;font-size:.85rem}
 
-    /* صفحة اللعبة */
-    .back{display:inline-block;margin:24px 5% 0;color:var(--muted);cursor:pointer}
+    /* ===== صفحة اللعبة ===== */
+    .game-page{max-width:1200px;margin:0 auto;padding:20px 5% 40px}
+    .back{display:inline-block;margin-bottom:6px;color:var(--muted);cursor:pointer}
     .back:hover{color:var(--green)}
-    .game-page{max-width:1100px;margin:0 auto;padding:10px 5% 40px}
-    .game-top{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;margin-top:16px}
-    .media{background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9}
-    .media video,.media img,.media iframe{width:100%;height:100%;object-fit:cover;display:block;background:#000;border:0}
-    .info h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:10px 0 12px}
-    .info .comment{color:#cfd5e0;line-height:1.9;margin-bottom:24px;white-space:pre-wrap}
-    .specs-box{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
-    .specs-box h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .game-top{display:grid;grid-template-columns:1.7fr 1fr;gap:28px;align-items:start}
+    /* أول عنصر في RTL = اليمين: الفيديو الكبير */
+    .media{background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;border:1px solid var(--line)}
+    .media video,.media img,.media iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;background:#000}
+    /* التاني = الشمال: الزر والوصف تحته */
+    .info-col{display:flex;flex-direction:column;gap:14px}
+    .info-col h1{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.4}
+    .action-row{display:flex;gap:8px;flex-wrap:wrap}
+    .action-row .btn{flex:1}
+    .desc-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+    .desc-box h3{color:var(--green);margin-bottom:8px;font-size:1.05rem}
+    .desc-box p{color:#cfd5e0;line-height:1.9;white-space:pre-wrap}
+    .report-row{font-size:.9rem;color:var(--muted)}
+
+    .panel{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+    .panel h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:1.3rem}
     .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
     .spec{background:var(--bg);padding:12px 14px;border-radius:10px;display:flex;justify-content:space-between;gap:10px}
     .spec span{color:var(--muted)}
-    .specs-box h3{margin:24px 0 12px;font-size:1.1rem}
     .links{display:flex;flex-direction:column;gap:8px}
     .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
     .links a:hover{border-color:var(--green)}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+    .related-grid .game-card img{aspect-ratio:16/9}
 
     /* التعليقات */
-    .comments-box{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
-    .comments-box h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
     .comment-form{display:flex;flex-direction:column;gap:10px}
     .comment-form input,.comment-form textarea{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 14px;width:100%}
     .comment-form input:focus,.comment-form textarea:focus{outline:none;border-color:var(--green)}
@@ -192,14 +210,18 @@
     .cmt-head small{color:var(--muted)}
     .comment-item p{color:#cfd5e0;white-space:pre-wrap;word-break:break-word}
 
+    .reveal{opacity:0;transform:translateY(20px);transition:.6s}
+    .reveal.in{opacity:1;transform:none}
+
+    @media(max-width:900px){
+      .game-top{grid-template-columns:1fr}
+    }
     @media(max-width:768px){
       .menu-toggle{display:block;margin-right:auto}
       .topbar nav{display:none;width:100%;flex-direction:column;gap:12px;margin:0}
       .topbar nav.open{display:flex}
       #search{width:100%}
       .slide-info{padding:40px 18px 24px}
-      .game-top{grid-template-columns:1fr}
-      .btn-lg{width:100%}
     }
   </style>
 </head>
@@ -248,6 +270,9 @@
         <div class="stat"><strong id="statLinks">0</strong><span>رابط تحميل</span></div>
         <div class="stat"><strong id="statVideos">0</strong><span>فيديو تشويقي</span></div>
       </div>
+      <div class="hero-actions">
+        <button class="btn btn-ghost" id="randomBtn">🎲 لعبة عشوائية</button>
+      </div>
     </section>
 
     <main>
@@ -256,11 +281,15 @@
 
       <div class="toolbar">
         <div class="filters" id="categories" role="group" aria-label="التصنيفات"></div>
-        <select class="sort-select" id="sortSelect" aria-label="ترتيب الألعاب">
-          <option value="default">الترتيب الافتراضي</option>
-          <option value="name">حسب الاسم</option>
-          <option value="cat">حسب التصنيف</option>
-        </select>
+        <div class="tools">
+          <button class="chip" id="favOnly">♥ المفضلة فقط</button>
+          <select class="sort-select" id="sortSelect" aria-label="ترتيب الألعاب">
+            <option value="default">الترتيب الافتراضي</option>
+            <option value="views">الأكثر مشاهدة</option>
+            <option value="name">حسب الاسم</option>
+            <option value="cat">حسب التصنيف</option>
+          </select>
+        </div>
       </div>
 
       <p class="count-info" id="countInfo"></p>
@@ -303,7 +332,7 @@
       </details>
       <details>
         <summary>ليه بعض الروابط مش شغالة؟</summary>
-        <p>الروابط بتتحدث باستمرار. لو لقيت رابط مش شغال جرّب الرابط البديل في نفس صفحة اللعبة، أو تواصل معانا.</p>
+        <p>الروابط بتتحدث باستمرار. لو لقيت رابط مش شغال، اضغط "الإبلاغ عن رابط معطل" في صفحة اللعبة، أو تواصل معانا.</p>
       </details>
       <details>
         <summary>إزاي أشغّل اللعبة بعد التحميل؟</summary>
@@ -332,33 +361,53 @@
 
   <!-- ===== صفحة اللعبة ===== -->
   <div id="gameView" hidden>
-    <a class="back" href="#top">→ رجوع للرئيسية</a>
     <div class="game-page">
+      <a class="back" href="#top">→ رجوع للرئيسية</a>
+
       <div class="game-top">
-        <!-- أول عنصر = اليمين: الفيديو -->
+        <!-- اليمين: الفيديو الكبير -->
         <div class="media" id="gMedia"></div>
-        <!-- تاني عنصر = الشمال: التفاصيل وزر التحميل -->
-        <div class="info">
+
+        <!-- الشمال: الزر والوصف تحته -->
+        <div class="info-col">
           <span class="badge" id="gCat"></span>
           <h1 id="gTitle"></h1>
-          <p class="comment" id="gComment"></p>
+
           <a class="btn btn-green btn-lg" id="gDownload" target="_blank" rel="noopener noreferrer">⬇ تحميل اللعبة</a>
+
+          <div class="action-row">
+            <button class="btn btn-ghost btn-sm" id="gFav">♡ أضف للمفضلة</button>
+            <button class="btn btn-ghost btn-sm" id="gShare">🔗 مشاركة</button>
+          </div>
+
+          <div class="desc-box">
+            <h3>عن اللعبة</h3>
+            <p id="gDesc"></p>
+          </div>
+
+          <div class="report-row">
+            لو الرابط مش شغال، <a class="link-sm" id="gReport" href="#">ابلغنا هنا</a>
+          </div>
         </div>
       </div>
 
-      <section class="specs-box">
-        <h2>تنزيل</h2>
+      <section class="panel">
+        <h2>تنزيل والمواصفات</h2>
         <div class="spec-grid" id="gSpecs"></div>
-        <h3>روابط التحميل</h3>
+        <h3 style="margin:24px 0 12px;font-size:1.1rem">روابط التحميل</h3>
         <div id="gLinks" class="links"></div>
       </section>
 
-      <section class="comments-box">
+      <section class="panel">
+        <h2>ألعاب مشابهة</h2>
+        <div class="related-grid" id="gRelated"></div>
+      </section>
+
+      <section class="panel">
         <h2>التعليقات</h2>
         <form id="commentForm" class="comment-form" novalidate>
           <input type="text" id="cName" placeholder="اسمك" maxlength="40" autocomplete="name">
           <textarea id="cBody" placeholder="اكتب تعليقك عن اللعبة..." maxlength="500" rows="3"></textarea>
-          <!-- حقل مخفي للبوتات، الإنسان مش هيشوفه -->
           <input type="text" id="cHoney" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
           <div class="comment-actions">
             <span id="cCount" class="count">0 / 500</span>
@@ -404,12 +453,31 @@
 
 <script src="db.js"></script>
 <script>
-/* ============ إعدادات الصور والملفات ============ */
+/* ============ الإعدادات ============ */
 const SUPABASE_URL = "https://mnrjvnxwnzkowcshkfxi.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff";
-const BUCKET = "games";          // اسم الـ bucket اللي فيه الصور
-const VIDEO_BUCKET = "videos";   // اسم الـ bucket اللي فيه الفيديوهات
+const BUCKET = "games";          // bucket الصور
+const VIDEO_BUCKET = "videos";   // bucket الفيديوهات
+const SLIDE_MS = 5000;
+const COMMENT_COOLDOWN_MS = 30000;
+const DEFAULT_TITLE = "GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة";
 const FALLBACK_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='100%25' height='100%25' fill='%231c2330'/%3E%3Ctext x='50%25' y='50%25' fill='%239aa4b5' font-family='Tahoma' font-size='56' text-anchor='middle' dominant-baseline='middle'%3EGameX%3C/text%3E%3C/svg%3E";
+
+/* ============ أدوات ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2400);
+}
 
 function resolveUrl(v, bucket = BUCKET) {
   if (!v) return "";
@@ -419,50 +487,84 @@ function resolveUrl(v, bucket = BUCKET) {
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${encodeURI(path)}`;
 }
 
-// يحوّل روابط YouTube و Vimeo لروابط embed
 function embedUrl(u) {
-  const yt = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+  const yt = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
   if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
   const vm = u.match(/vimeo\.com\/(\d+)/);
   if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
   return null;
 }
 
-// لو صورة فشلت، نعرض الاحتياطية (مرة واحدة)
+function toObj(v) {
+  if (!v) return {};
+  if (typeof v === "string") { try { return JSON.parse(v) || {}; } catch { return {}; } }
+  return typeof v === "object" ? v : {};
+}
+function toArr(v) {
+  if (!v) return [];
+  if (typeof v === "string") { try { return JSON.parse(v) || []; } catch { return []; } }
+  return Array.isArray(v) ? v : [];
+}
+
+// لو صورة فشلت نعرض الاحتياطية
 document.addEventListener("error", e => {
   const t = e.target;
   if (t.tagName === "IMG" && t.src !== FALLBACK_IMG) t.src = FALLBACK_IMG;
 }, true);
 
 /* ============ الحالة ============ */
-let GAMES = [];
-let featured = [];
+const state = {
+  games: [], loaded: false, cat: "الكل", q: "", sort: "default", favOnly: false,
+  banner: [], slide: 0, slideTimer: null, current: null, commentGameId: null
+};
+let favs = new Set(store.get("gx_fav", []).map(String));
+let views = store.get("gx_views", {});
 
-/* ============ أدوات مساعدة ============ */
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const SLIDE_MS = 5000;
-const findGame = id => GAMES.find(x => String(x.id) === String(id));
-const gameHref = id => "#game/" + encodeURIComponent(id);
+function toggleFav(id) {
+  id = String(id);
+  favs.has(id) ? favs.delete(id) : favs.add(id);
+  store.set("gx_fav", [...favs]);
+  renderGrid();
+  updateFavBtn();
+}
 
-function toast(msg) {
-  const t = $("#toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+function bumpView(id) {
+  views[id] = (views[id] || 0) + 1;
+  store.set("gx_views", views);
+}
+
+/* ============ تنظيف بيانات اللعبة ============ */
+function normalize(g) {
+  const links = toArr(g.links).map(l =>
+    typeof l === "string"
+      ? { name: "رابط التحميل", url: l }
+      : { name: l.name || l.title || "رابط التحميل", url: l.url || l.link || "" }
+  ).filter(l => l.url);
+
+  return {
+    ...g,
+    id: String(g.id),
+    title: g.title || g.name || "بدون اسم",
+    cat: g.cat || g.category || "عام",
+    img: resolveUrl(g.img || g.image || g.cover || g.poster),
+    video: String(g.video || g.videoUrl || g.video_url || g.trailer || "").trim(),
+    desc: g.desc || g.description || g.details || g.about || g.summary || "",
+    comment: g.comment || g.short || "",
+    featured: !!g.featured,
+    specs: toObj(g.specs),
+    links
+  };
 }
 
 /* ============ شاشة الافتتاح ============ */
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const s = $("#splash");
-    s.classList.add("hide");
-    setTimeout(() => s.remove(), 600);
-  }, 1800);
-});
+setTimeout(() => {
+  const s = $("#splash");
+  if (!s) return;
+  s.classList.add("hide");
+  setTimeout(() => s.remove(), 600);
+}, 1600);
 
-/* ============ شريط التقدم + زر للأعلى ============ */
+/* ============ شريط التقدم + للأعلى ============ */
 window.addEventListener("scroll", () => {
   const h = document.documentElement;
   const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
@@ -470,210 +572,268 @@ window.addEventListener("scroll", () => {
   $("#toTop").classList.toggle("show", h.scrollTop > 400);
 });
 $("#toTop").onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
 $("#year").textContent = new Date().getFullYear();
 
 /* ============ الإحصائيات ============ */
 function renderStats() {
-  const cats = new Set(GAMES.map(g => g.cat));
-  $("#statGames").textContent = GAMES.length;
-  $("#statCats").textContent = cats.size;
-  $("#statLinks").textContent = GAMES.reduce((n, g) => n + g.links.length, 0);
-  $("#statVideos").textContent = GAMES.filter(g => g.video).length;
+  $("#statGames").textContent = state.games.length;
+  $("#statCats").textContent = new Set(state.games.map(g => g.cat)).size;
+  $("#statLinks").textContent = state.games.reduce((n, g) => n + g.links.length, 0);
+  $("#statVideos").textContent = state.games.filter(g => g.video).length;
 }
 
-/* ============ البانر (كل لعبة 5 ثواني) ============ */
-let slideIdx = 0, slideTimer = null;
-
+/* ============ البانر ============ */
 function renderBanner() {
-  featured = GAMES.filter(g => g.featured);
-  if (!featured.length) { $("#banner").hidden = true; return; }
+  const featured = state.games.filter(g => g.featured);
+  state.banner = featured.length ? featured : state.games.slice(0, 5);
+  if (!state.banner.length) { $("#banner").hidden = true; return; }
   $("#banner").hidden = false;
-  $("#slides").innerHTML = featured.map((g, i) => `
+  $("#slides").innerHTML = state.banner.map((g, i) => `
     <div class="slide${i === 0 ? " active" : ""}" data-id="${esc(g.id)}">
-      <img src="${esc(g.img)}" alt="${esc(g.title)}">
+      <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}">
       <div class="slide-info">
         <h2>${esc(g.title)}</h2>
-        <p>${esc(g.comment)}</p>
+        <p>${esc(g.comment || g.desc)}</p>
       </div>
     </div>`).join("");
-  $("#dots").innerHTML = featured.map((_, i) =>
+  $("#dots").innerHTML = state.banner.map((_, i) =>
     `<button class="dot${i === 0 ? " active" : ""}" data-i="${i}" aria-label="شريحة ${i + 1}"></button>`).join("");
+  state.slide = 0;
+  startSlides();
 }
 
 function showSlide(i) {
-  if (!featured.length) return;
-  slideIdx = (i + featured.length) % featured.length;
-  document.querySelectorAll("#slides .slide").forEach((s, n) => s.classList.toggle("active", n === slideIdx));
-  document.querySelectorAll(".dot").forEach((d, n) => d.classList.toggle("active", n === slideIdx));
+  const n = state.banner.length;
+  if (!n) return;
+  state.slide = (i + n) % n;
+  document.querySelectorAll("#slides .slide").forEach((s, k) => s.classList.toggle("active", k === state.slide));
+  document.querySelectorAll(".dot").forEach((d, k) => d.classList.toggle("active", k === state.slide));
+  restartBannerBar();
+}
 
+function restartBannerBar() {
   const bar = $("#bannerBar");
   bar.classList.remove("run");
   void bar.offsetWidth;
   bar.classList.add("run");
-
-  clearTimeout(slideTimer);
-  slideTimer = setTimeout(() => showSlide(slideIdx + 1), SLIDE_MS);
+  clearTimeout(state.slideTimer);
+  state.slideTimer = setTimeout(() => showSlide(state.slide + 1), SLIDE_MS);
 }
 
-$("#nextSlide").onclick = e => { e.stopPropagation(); showSlide(slideIdx + 1); };
-$("#prevSlide").onclick = e => { e.stopPropagation(); showSlide(slideIdx - 1); };
+function startSlides() {
+  showSlide(0);
+}
+
+$("#nextSlide").onclick = e => { e.stopPropagation(); showSlide(state.slide + 1); };
+$("#prevSlide").onclick = e => { e.stopPropagation(); showSlide(state.slide - 1); };
 $("#dots").onclick = e => {
   const d = e.target.closest(".dot");
   if (d) { e.stopPropagation(); showSlide(+d.dataset.i); }
 };
 $("#banner").onclick = e => {
   const s = e.target.closest(".slide");
-  if (s) location.hash = gameHref(s.dataset.id);
+  if (s) openGame(s.dataset.id);
 };
 
-/* ============ الفلاتر والترتيب والبحث ============ */
-let activeCat = "الكل";
-let query = "";
-let sortBy = "default";
-
+/* ============ الفلاتر والبحث ============ */
 function renderCategories() {
-  const cats = ["الكل", ...new Set(GAMES.map(g => g.cat))];
+  const cats = ["الكل", ...new Set(state.games.map(g => g.cat))];
   $("#categories").innerHTML = cats.map(c =>
-    `<button class="chip${c === activeCat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+    `<button class="chip${c === state.cat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
 }
 
-function getFiltered() {
-  let list = GAMES.filter(g =>
-    (activeCat === "الكل" || g.cat === activeCat) &&
-    g.title.toLowerCase().includes(query.toLowerCase())
+function visibleGames() {
+  const q = state.q.toLowerCase();
+  let list = state.games.filter(g =>
+    (state.cat === "الكل" || g.cat === state.cat) &&
+    (!state.favOnly || favs.has(g.id)) &&
+    (g.title.toLowerCase().includes(q) || g.cat.toLowerCase().includes(q))
   );
-  if (sortBy === "name") list = [...list].sort((a, b) => a.title.localeCompare(b.title));
-  if (sortBy === "cat") list = [...list].sort((a, b) => a.cat.localeCompare(b.cat));
+  if (state.sort === "name") list = [...list].sort((a, b) => a.title.localeCompare(b.title, "ar"));
+  else if (state.sort === "cat") list = [...list].sort((a, b) => a.cat.localeCompare(b.cat, "ar"));
+  else if (state.sort === "views") list = [...list].sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0));
   return list;
 }
 
-function renderGrid() {
-  const list = getFiltered();
-  $("#gamesGrid").innerHTML = list.map(g => `
-    <article class="game-card reveal" data-id="${esc(g.id)}">
-      <img src="${esc(g.img)}" alt="${esc(g.title)}" loading="lazy">
+function cardHTML(g) {
+  const isFav = favs.has(g.id);
+  return `
+    <article class="game-card reveal" data-open="${esc(g.id)}">
+      <div class="thumb">
+        <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}" loading="lazy">
+        <button class="fav${isFav ? " on" : ""}" data-fav="${esc(g.id)}" aria-label="إضافة للمفضلة">${isFav ? "♥" : "♡"}</button>
+        ${g.video ? '<span class="play">▶ فيديو</span>' : ""}
+      </div>
       <div class="body">
         <span class="badge">${esc(g.cat)}</span>
         <h3>${esc(g.title)}</h3>
         <div class="card-actions">
-          <button class="btn btn-video btn-sm" data-open="${esc(g.id)}" ${g.video ? "" : "disabled"}>▶ الفيديو</button>
+          <button class="btn btn-video btn-sm" data-open="${esc(g.id)}">▶ التفاصيل</button>
           <button class="btn btn-green btn-sm" data-open="${esc(g.id)}">⬇ تنزيل</button>
         </div>
       </div>
-    </article>`).join("");
+    </article>`;
+}
+
+function renderGrid() {
+  const list = visibleGames();
+  $("#gamesGrid").innerHTML = list.map(cardHTML).join("");
   $("#empty").hidden = list.length > 0;
-  $("#countInfo").textContent = `عرض ${list.length} من ${GAMES.length} لعبة`;
+  $("#countInfo").textContent = `عرض ${list.length} من ${state.games.length} لعبة`;
+  $("#favOnly").classList.toggle("active", state.favOnly);
   observeReveal();
 }
 
 $("#categories").onclick = e => {
   const c = e.target.closest(".chip");
   if (!c) return;
-  activeCat = c.dataset.cat;
+  state.cat = c.dataset.cat;
   renderCategories();
   renderGrid();
 };
-$("#sortSelect").onchange = e => { sortBy = e.target.value; renderGrid(); };
-$("#search").oninput = e => { query = e.target.value.trim(); renderGrid(); };
-
-// الضغط على أي جزء من الكارت (أو زرار الفيديو/التنزيل) يفتح صفحة اللعبة
-$("#gamesGrid").onclick = e => {
-  const btn = e.target.closest("[data-open]");
-  const card = e.target.closest(".game-card");
-  const id = btn ? btn.dataset.open : card && card.dataset.id;
-  if (id) location.hash = gameHref(id);
+$("#favOnly").onclick = () => { state.favOnly = !state.favOnly; renderGrid(); };
+$("#sortSelect").onchange = e => { state.sort = e.target.value; renderGrid(); };
+$("#search").oninput = e => {
+  state.q = e.target.value.trim();
+  if (!$("#gameView").hidden) location.hash = "games";
+  renderGrid();
 };
 
-/* ============ الفيديو ============ */
+$("#gamesGrid").onclick = e => {
+  const f = e.target.closest("[data-fav]");
+  if (f) { e.stopPropagation(); toggleFav(f.dataset.fav); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) openGame(o.dataset.open);
+};
+
+$("#randomBtn").onclick = () => {
+  if (!state.games.length) return toast("مفيش ألعاب متاحة حالياً");
+  const g = state.games[Math.floor(Math.random() * state.games.length)];
+  openGame(g.id);
+};
+
+/* ============ الفيديو (كبير على اليمين) ============ */
 function renderMedia(g) {
   const media = $("#gMedia");
-  const raw = g.video;
   const poster = g.img || FALLBACK_IMG;
+  media.innerHTML = "";
 
-  if (!raw) {
+  if (!g.video) {
     media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
     return;
   }
 
-  const embed = embedUrl(raw);
+  const embed = embedUrl(g.video);
   if (embed) {
     media.innerHTML = `<iframe src="${esc(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
     return;
   }
 
-  const src = resolveUrl(raw, VIDEO_BUCKET);
-  media.innerHTML = `<video src="${esc(src)}" poster="${esc(poster)}" controls controlsList="nodownload" playsinline></video>`;
-  const v = media.querySelector("video");
-  v.addEventListener("error", () => {
+  const src = resolveUrl(g.video, VIDEO_BUCKET);
+  media.innerHTML = `<video src="${esc(src)}" poster="${esc(poster)}" controls controlsList="nodownload" playsinline preload="metadata"></video>`;
+  media.querySelector("video").addEventListener("error", () => {
     media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
     toast("تعذّر تشغيل الفيديو");
   });
 }
 
 /* ============ صفحة اللعبة ============ */
-function showGame(g) {
+function updateFavBtn() {
+  const g = state.current;
+  if (!g) return;
+  const isFav = favs.has(g.id);
+  $("#gFav").textContent = isFav ? "♥ في المفضلة" : "♡ أضف للمفضلة";
+}
+
+async function shareGame(g) {
+  const url = location.href;
+  try {
+    if (navigator.share) { await navigator.share({ title: g.title, url }); return; }
+  } catch { /* المستخدم لغى المشاركة */ }
+  try {
+    await navigator.clipboard.writeText(url);
+    toast("تم نسخ رابط اللعبة");
+  } catch {
+    toast("انسخ الرابط من شريط العنوان");
+  }
+}
+
+function showGame(id) {
   $("#homeView").hidden = true;
   $("#gameView").hidden = false;
 
+  if (!state.loaded) {
+    $("#gTitle").textContent = "جاري التحميل...";
+    return;
+  }
+
+  const g = state.games.find(x => x.id === String(id));
+  if (!g) {
+    toast("اللعبة دي مش موجودة");
+    location.hash = "top";
+    return;
+  }
+
+  state.current = g;
+  document.title = g.title + " | GameX";
   $("#gCat").textContent = g.cat;
   $("#gTitle").textContent = g.title;
-  $("#gComment").textContent = g.desc || g.comment;
-  document.title = g.title + " | GameX";
+  $("#gDesc").textContent = g.desc || g.comment || "لا يوجد وصف لهذه اللعبة.";
 
   renderMedia(g);
 
   const dl = $("#gDownload");
   if (g.links.length) {
     dl.href = g.links[0].url;
-    dl.hidden = false;
+    dl.textContent = "⬇ تحميل اللعبة";
+    dl.classList.remove("disabled");
   } else {
-    dl.hidden = true;
+    dl.removeAttribute("href");
+    dl.textContent = "الرابط غير متاح حالياً";
+    dl.classList.add("disabled");
   }
 
-  $("#gSpecs").innerHTML = Object.entries(g.specs).map(([k, v]) =>
-    `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")
-    || "<p>لا توجد مواصفات مضافة.</p>";
+  $("#gReport").href = `mailto:contact@yourdomain.com?subject=${encodeURIComponent("رابط معطل: " + g.title)}`;
+  updateFavBtn();
+
+  const specs = Object.entries(g.specs);
+  $("#gSpecs").innerHTML = specs.length
+    ? specs.map(([k, v]) => `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")
+    : "<p>لا توجد مواصفات مضافة.</p>";
 
   $("#gLinks").innerHTML = g.links.length
     ? g.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.name)} <span>⬇</span></a>`).join("")
     : "<p>لا توجد روابط حالياً.</p>";
 
+  const related = state.games
+    .filter(x => x.id !== g.id && x.cat === g.cat)
+    .slice(0, 4);
+  $("#gRelated").innerHTML = related.length
+    ? related.map(cardHTML).join("")
+    : "<p>لا توجد ألعاب مشابهة حالياً.</p>";
+  observeReveal();
+
+  bumpView(g.id);
   loadComments(g.id);
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-function showHome() {
+$("#gFav").onclick = () => { if (state.current) toggleFav(state.current.id); };
+$("#gShare").onclick = () => { if (state.current) shareGame(state.current); };
+
+/* ============ الراوتر ============ */
+function openGame(id) {
+  location.hash = "game/" + encodeURIComponent(id);
+}
+
+function showHome(h) {
   const v = document.querySelector("#gMedia video");
   if (v) v.pause();
   $("#gMedia").innerHTML = "";
-
   $("#gameView").hidden = true;
   $("#homeView").hidden = false;
-  document.title = "GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة";
-}
+  document.title = DEFAULT_TITLE;
 
-/* ============ الراوتر ============ */
-function route() {
-  const h = decodeURIComponent(location.hash.slice(1));
-
-  if (h.startsWith("game/")) {
-    const g = findGame(h.slice(5));
-    if (g) {
-      try {
-        showGame(g);
-      } catch (err) {
-        console.error("showGame error:", err);
-        toast("حصلت مشكلة في فتح اللعبة");
-      }
-      return;
-    }
-    if (GAMES.length) toast("اللعبة دي مش موجودة");
-    showHome();
-    return;
-  }
-
-  showHome();
   if (!h || h === "top") {
     window.scrollTo({ top: 0, behavior: "auto" });
   } else {
@@ -682,14 +842,15 @@ function route() {
   }
 }
 
-// نستخدم popstate بدل hashchange عشان الزرار "رجوع" في المتصفح يشتغل
-window.addEventListener("popstate", route);
-
-// فتح صفحة اللعبة مباشرة
-function openGame(id) {
-  history.pushState(null, "", gameHref(id));
-  route();
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith("game/")) {
+    showGame(h.slice(5));
+  } else {
+    showHome(h);
+  }
 }
+window.addEventListener("hashchange", route);
 
 /* ============ النشرة البريدية ============ */
 $("#newsletter").onsubmit = e => {
@@ -712,8 +873,14 @@ $("#mainNav").onclick = e => { if (e.target.tagName === "A") $("#mainNav").class
 
 /* ============ ظهور العناصر عند السكرول ============ */
 const revealIO = new IntersectionObserver(entries => {
-  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); revealIO.unobserve(en.target); } });
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      en.target.classList.add("in");
+      revealIO.unobserve(en.target);
+    }
+  });
 }, { threshold: 0.12 });
+
 function observeReveal() {
   document.querySelectorAll(".reveal:not(.in)").forEach(el => revealIO.observe(el));
 }
@@ -729,9 +896,6 @@ document.addEventListener("keydown", e => {
 });
 
 /* ============ التعليقات ============ */
-const COMMENT_COOLDOWN_MS = 30000;
-let currentGameId = null;
-
 async function fetchComments(gameId) {
   const url = `${SUPABASE_URL}/rest/v1/comments?select=id,name,body,created_at`
     + `&game_id=eq.${encodeURIComponent(gameId)}&approved=eq.true&order=created_at.desc`;
@@ -743,11 +907,7 @@ async function fetchComments(gameId) {
 async function postComment(gameId, name, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
     method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      "Content-Type": "application/json",
-      Prefer: "return=minimal"
-    },
+    headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
     body: JSON.stringify({ game_id: String(gameId), name, body })
   });
   if (!res.ok) throw new Error("post failed");
@@ -764,19 +924,16 @@ function showCommentMsg(text, type) {
 }
 
 async function loadComments(gameId) {
-  currentGameId = String(gameId);
+  state.commentGameId = String(gameId);
   const list = $("#commentList");
   list.innerHTML = `<p class="empty">جاري تحميل التعليقات...</p>`;
   try {
     const rows = await fetchComments(gameId);
-    if (String(gameId) !== currentGameId) return;
+    if (state.commentGameId !== String(gameId)) return;
     list.innerHTML = rows.length
       ? rows.map(c => `
           <div class="comment-item">
-            <div class="cmt-head">
-              <strong>${esc(c.name)}</strong>
-              <small>${fmtDate(c.created_at)}</small>
-            </div>
+            <div class="cmt-head"><strong>${esc(c.name)}</strong><small>${fmtDate(c.created_at)}</small></div>
             <p>${esc(c.body)}</p>
           </div>`).join("")
       : `<p class="empty">لا توجد تعليقات بعد، كن أول من يكتب.</p>`;
@@ -792,15 +949,14 @@ $("#cBody").addEventListener("input", e => {
 
 $("#commentForm").onsubmit = async e => {
   e.preventDefault();
-  if ($("#cHoney").value) return;
+  if ($("#cHoney").value) return; // بوت
 
   const name = $("#cName").value.trim();
   const body = $("#cBody").value.trim();
-
   if (name.length < 2) return showCommentMsg("اكتب اسمك (حرفين على الأقل).", "err");
   if (body.length < 3) return showCommentMsg("التعليق قصير قوي، اكتب كلام أكتر.", "err");
 
-  const last = +localStorage.getItem("gx_last_comment") || 0;
+  const last = +store.get("gx_last_comment", 0);
   const wait = Math.ceil((COMMENT_COOLDOWN_MS - (Date.now() - last)) / 1000);
   if (wait > 0) return showCommentMsg(`استنى ${wait} ثانية قبل ما تكتب تعليق تاني.`, "err");
 
@@ -809,12 +965,12 @@ $("#commentForm").onsubmit = async e => {
   showCommentMsg("جاري النشر...", "");
 
   try {
-    await postComment(currentGameId, name, body);
-    localStorage.setItem("gx_last_comment", Date.now());
+    await postComment(state.commentGameId, name, body);
+    store.set("gx_last_comment", Date.now());
     $("#commentForm").reset();
     $("#cCount").textContent = "0 / 500";
     showCommentMsg("تم نشر تعليقك، شكراً لك!", "ok");
-    loadComments(currentGameId);
+    loadComments(state.commentGameId);
   } catch (err) {
     console.error(err);
     showCommentMsg("حصلت مشكلة في النشر، حاول تاني.", "err");
@@ -823,37 +979,21 @@ $("#commentForm").onsubmit = async e => {
   }
 };
 
-/* ============ تحميل الألعاب من قاعدة البيانات ============ */
+/* ============ التشغيل ============ */
 async function init() {
   try {
-    const list = await GameXDB.getGames();
-    GAMES = list.map(g => {
-      const rawVideo = g.video || g.videoUrl || g.video_url || g.trailer || "";
-      const rawDesc = g.desc || g.description || g.details || g.about || g.summary || "";
-      return {
-        ...g,
-        id: g.id,
-        title: g.title || g.name || "",
-        cat: g.cat || g.category || "عام",
-        img: resolveUrl(g.img || g.image || g.cover || g.poster),
-        video: String(rawVideo).trim(),
-        comment: g.comment || rawDesc,
-        desc: rawDesc,
-        featured: !!g.featured,
-        specs: g.specs || {},
-        links: Array.isArray(g.links) ? g.links : []
-      };
-    });
+    const rows = await GameXDB.getGames();
+    state.games = rows.map(normalize);
   } catch (err) {
     console.error(err);
     toast("تعذّر تحميل الألعاب: " + err.message);
-    GAMES = [];
+    state.games = [];
   }
+  state.loaded = true;
   renderStats();
   renderBanner();
   renderCategories();
   renderGrid();
-  showSlide(0);
   observeReveal();
   route();
 }
