@@ -242,38 +242,25 @@
     </div>
   </section>
 
-  /* ============ التشغيل ============ */
-let GAMES = [];
+  <!-- الألعاب -->
+  <main>
+    <h2 class="section-title" id="games">مكتبة الألعاب</h2>
+    <p class="section-sub">اختر التصنيف، شاهد الفيديو، واضغط تنزيل</p>
 
-async function init() {
-  try {
-    GAMES = await GameXDB.getGames();
-    // تأكد إن كل لعبة فيها الحقول الأساسية
-    GAMES = GAMES.map(g => ({
-      links: [],
-      specs: {},
-      cat: "عام",
-      img: "",
-      comment: "",
-      desc: "",
-      ...g,
-      id: g.id
-    }));
-  } catch (err) {
-    console.error(err);
-    toast("تعذّر تحميل الألعاب: " + err.message);
-    GAMES = [];
-  }
-  renderStats();
-  renderBanner();
-  renderCategories();
-  renderGrid();
-  showSlide(0);
-  observeReveal();
-}
+    <div class="toolbar">
+      <div class="filters" id="categories" role="group" aria-label="التصنيفات"></div>
+      <select class="sort-select" id="sortSelect" aria-label="ترتيب الألعاب">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="name">حسب الاسم</option>
+        <option value="cat">حسب التصنيف</option>
+      </select>
+    </div>
 
-init();
-  
+    <p class="count-info" id="countInfo"></p>
+    <section id="gamesGrid" class="grid" aria-live="polite"></section>
+    <p id="empty" class="empty" hidden>لا توجد نتائج مطابقة، جرّب كلمة بحث أخرى.</p>
+  </main>
+
   <!-- طريقة التحميل -->
   <h2 class="section-title" id="how">إزاي تحمّل اللعبة؟</h2>
   <p class="section-sub">خطوات بسيطة من أول ضغطة لحد ما تلعب</p>
@@ -403,47 +390,17 @@ init();
     </div>
   </div>
 
+<script src="db.js"></script>
 <script>
-/* ============================================================
-   بيانات الألعاب: عدّل هنا فقط
-   featured : true = تظهر في البانر
-   video    : رابط mp4 مباشر (أو سيب فاضي)
-   links    : روابط التحميل
-   ============================================================ */
-const GAMES = [
-  {
-    id: 1, title: "Cyber Rush", cat: "أكشن", featured: true,
-    img: "https://placehold.co/1280x720/1e293b/22c55e?text=Cyber+Rush",
-    video: "videos/cyber-rush.mp4",
-    comment: "لعبة أكشن سريعة في عالم مستقبلي، فيها جرافيك خرافي وقصة مشوقة.",
-    desc: "لعبة أكشن سريعة في عالم مستقبلي، فيها جرافيك خرافي وقصة مشوقة تخليك مش عايز تسيبها.",
-    specs: { "المطور": "Neon Studio", "الحجم": "12 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i5", "الرام": "8 GB", "كرت الشاشة": "GTX 1060" },
-    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/cyber-rush" }]
-  },
-  {
-    id: 2, title: "Dragon Quest X", cat: "RPG", featured: true,
-    img: "https://placehold.co/1280x720/3b1d1d/f97316?text=Dragon+Quest+X",
-    video: "videos/dragon-quest.mp4",
-    comment: "مغامرة RPG واسعة مليانة وحوش وكنوز، واختار طريقك بالكامل.",
-    desc: "مغامرة RPG واسعة مليانة وحوش وكنوز، واختار طريقك وأسلوب لعبك بالكامل.",
-    specs: { "المطور": "Ember Games", "الحجم": "25 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i7", "الرام": "16 GB", "كرت الشاشة": "RTX 2060" },
-    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/dragon-quest" }]
-  },
-  {
-    id: 3, title: "Racing Legends", cat: "سباقات", featured: true,
-    img: "https://placehold.co/1280x720/102a43/38bdf8?text=Racing+Legends",
-    video: "videos/racing-legends.mp4",
-    comment: "سباقات سرعة بأشهر السيارات، وفيزياء حقيقية وتحديات أونلاين.",
-    desc: "سباقات سرعة بأشهر السيارات، وفيزياء حقيقية وتحديات أونلاين مع أصحابك.",
-    specs: { "المطور": "Velocity Team", "الحجم": "18 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i5", "الرام": "8 GB", "كرت الشاشة": "GTX 1660" },
-    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/racing-legends" }]
-  }
-];
+/* ============ الحالة ============ */
+let GAMES = [];      // بتتحمل من Supabase
+let featured = [];   // الألعاب المميزة للبانر
 
 /* ============ أدوات مساعدة ============ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const SLIDE_MS = 5000;
+const findGame = id => GAMES.find(x => String(x.id) === String(id));
 
 function toast(msg) {
   const t = $("#toast");
@@ -471,7 +428,6 @@ window.addEventListener("scroll", () => {
 });
 $("#toTop").onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-/* ============ السنة ============ */
 $("#year").textContent = new Date().getFullYear();
 
 /* ============ الإحصائيات ============ */
@@ -485,12 +441,13 @@ function renderStats() {
 
 /* ============ البانر (كل لعبة 5 ثواني) ============ */
 let slideIdx = 0, slideTimer = null;
-const featured = GAMES.filter(g => g.featured);
 
 function renderBanner() {
+  featured = GAMES.filter(g => g.featured);
   if (!featured.length) { $("#banner").hidden = true; return; }
+  $("#banner").hidden = false;
   $("#slides").innerHTML = featured.map((g, i) => `
-    <div class="slide${i === 0 ? " active" : ""}" data-id="${g.id}">
+    <div class="slide${i === 0 ? " active" : ""}" data-id="${esc(g.id)}">
       <img src="${esc(g.img)}" alt="${esc(g.title)}">
       <div class="slide-info">
         <h2>${esc(g.title)}</h2>
@@ -502,6 +459,7 @@ function renderBanner() {
 }
 
 function showSlide(i) {
+  if (!featured.length) return;
   slideIdx = (i + featured.length) % featured.length;
   document.querySelectorAll("#slides .slide").forEach((s, n) => s.classList.toggle("active", n === slideIdx));
   document.querySelectorAll(".dot").forEach((d, n) => d.classList.toggle("active", n === slideIdx));
@@ -523,7 +481,7 @@ $("#dots").onclick = e => {
 };
 $("#banner").onclick = e => {
   const s = e.target.closest(".slide");
-  if (s) openDetails(+s.dataset.id);
+  if (s) openDetails(s.dataset.id);
 };
 
 /* ============ الفلاتر والترتيب والبحث ============ */
@@ -550,14 +508,14 @@ function getFiltered() {
 function renderGrid() {
   const list = getFiltered();
   $("#gamesGrid").innerHTML = list.map(g => `
-    <article class="game-card reveal" data-id="${g.id}">
+    <article class="game-card reveal" data-id="${esc(g.id)}">
       <img src="${esc(g.img)}" alt="${esc(g.title)}" loading="lazy">
       <div class="body">
         <span class="badge">${esc(g.cat)}</span>
         <h3>${esc(g.title)}</h3>
         <div class="card-actions">
-          <button class="btn btn-video btn-sm" data-video="${g.id}" ${g.video ? "" : "disabled"}>▶ الفيديو</button>
-          <button class="btn btn-green btn-sm" data-open="${g.id}">⬇ تنزيل</button>
+          <button class="btn btn-video btn-sm" data-video="${esc(g.id)}" ${g.video ? "" : "disabled"}>▶ الفيديو</button>
+          <button class="btn btn-green btn-sm" data-open="${esc(g.id)}">⬇ تنزيل</button>
         </div>
       </div>
     </article>`).join("");
@@ -580,24 +538,24 @@ $("#gamesGrid").onclick = e => {
   const v = e.target.closest("[data-video]");
   const o = e.target.closest("[data-open]");
   const card = e.target.closest(".game-card");
-  if (v) { e.stopPropagation(); openVideo(+v.dataset.video); }
-  else if (o) { e.stopPropagation(); openDetails(+o.dataset.open); }
-  else if (card) openDetails(+card.dataset.id);
+  if (v) { e.stopPropagation(); openVideo(v.dataset.video); }
+  else if (o) { e.stopPropagation(); openDetails(o.dataset.open); }
+  else if (card) openDetails(card.dataset.id);
 };
 
 /* ============ نافذة التفاصيل ============ */
 let currentId = null;
 
 function openDetails(id) {
-  const g = GAMES.find(x => x.id === id);
+  const g = findGame(id);
   if (!g) return;
-  currentId = id;
+  currentId = g.id;
   $("#mImg").src = g.img;
   $("#mImg").alt = g.title;
   $("#mCat").textContent = g.cat;
   $("#mTitle").textContent = g.title;
   $("#mDesc").textContent = g.desc || g.comment;
-  $("#mSpecs").innerHTML = Object.entries(g.specs || {}).map(([k, v]) =>
+  $("#mSpecs").innerHTML = Object.entries(g.specs).map(([k, v]) =>
     `<div class="spec"><span>${esc(k)}: </span>${esc(v)}</div>`).join("");
   $("#mVideo").hidden = !g.video;
   $("#mDownload").hidden = !g.links.length;
@@ -609,13 +567,13 @@ function openDetails(id) {
 
 $("#mVideo").onclick = () => openVideo(currentId);
 $("#mDownload").onclick = () => {
-  const g = GAMES.find(x => x.id === currentId);
+  const g = findGame(currentId);
   if (g && g.links[0]) window.open(g.links[0].url, "_blank", "noopener");
 };
 
 /* ============ نافذة الفيديو ============ */
 function openVideo(id) {
-  const g = GAMES.find(x => x.id === id);
+  const g = findGame(id);
   if (!g || !g.video) { toast("الفيديو غير متاح لهذه اللعبة"); return; }
   $("#vTitle").textContent = g.title;
   $("#videoWrap").innerHTML = `<video src="${esc(g.video)}" poster="${esc(g.img)}" controls controlsList="nodownload" playsinline></video>`;
@@ -626,15 +584,18 @@ function openVideo(id) {
 
 /* ============ فتح وإغلاق النوافذ ============ */
 function openModal(id) {
-  const m = document.getElementById(id);
-  m.hidden = false;
+  document.getElementById(id).hidden = false;
   document.body.classList.add("lock");
 }
 
 function closeModal(id) {
   const m = document.getElementById(id);
   m.hidden = true;
-  if (id === "videoModal") $("#videoWrap").innerHTML = "";
+  if (id === "videoModal") {
+    const v = $("#videoWrap").querySelector("video");
+    if (v) v.pause();
+    $("#videoWrap").innerHTML = "";
+  }
   if (!document.querySelector(".modal:not([hidden])")) document.body.classList.remove("lock");
 }
 
@@ -683,13 +644,37 @@ document.addEventListener("keydown", e => {
   if ((e.ctrlKey || e.metaKey) && ["c", "x", "u", "s", "p", "a"].includes(k)) e.preventDefault();
 });
 
-/* ============ التشغيل ============ */
-renderStats();
-renderBanner();
-renderCategories();
-renderGrid();
-showSlide(0);
-observeReveal();
+/* ============ تحميل الألعاب من قاعدة البيانات ============ */
+async function init() {
+  try {
+    const list = await GameXDB.getGames();
+    GAMES = list.map(g => ({
+      ...g,
+      id: g.id,
+      title: g.title || "",
+      cat: g.cat || "عام",
+      img: g.img || "",
+      video: g.video || "",
+      comment: g.comment || "",
+      desc: g.desc || "",
+      featured: !!g.featured,
+      specs: g.specs || {},
+      links: Array.isArray(g.links) ? g.links : []
+    }));
+  } catch (err) {
+    console.error(err);
+    toast("تعذّر تحميل الألعاب: " + err.message);
+    GAMES = [];
+  }
+  renderStats();
+  renderBanner();
+  renderCategories();
+  renderGrid();
+  showSlide(0);
+  observeReveal();
+}
+
+init();
 </script>
 </body>
 </html>
