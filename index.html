@@ -24,7 +24,7 @@
     body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%;-webkit-user-drag:none}
-    button,input,select{font:inherit}
+    button,input,select,textarea{font:inherit}
 
     /* شاشة الافتتاح */
     #splash{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
@@ -104,7 +104,7 @@
 
     /* الأزرار */
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:.2s;text-decoration:none}
-    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
     .btn-green{background:var(--green);color:#052e16}
     .btn-green:hover{background:var(--green-d)}
     .btn-video{background:var(--card2);color:var(--text);border:1px solid var(--line)}
@@ -160,11 +160,10 @@
     .back:hover{color:var(--green)}
     .game-page{max-width:1100px;margin:0 auto;padding:10px 5% 40px}
     .game-top{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;margin-top:16px}
-    /* في RTL: العنصر الأول على اليمين، والتاني على الشمال */
     .media{background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9}
-    .media video,.media img{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+    .media video,.media img,.media iframe{width:100%;height:100%;object-fit:cover;display:block;background:#000;border:0}
     .info h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:10px 0 12px}
-    .info .comment{color:#cfd5e0;line-height:1.9;margin-bottom:24px}
+    .info .comment{color:#cfd5e0;line-height:1.9;margin-bottom:24px;white-space:pre-wrap}
     .specs-box{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
     .specs-box h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
     .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -174,6 +173,24 @@
     .links{display:flex;flex-direction:column;gap:8px}
     .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
     .links a:hover{border-color:var(--green)}
+
+    /* التعليقات */
+    .comments-box{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+    .comments-box h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .comment-form{display:flex;flex-direction:column;gap:10px}
+    .comment-form input,.comment-form textarea{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 14px;width:100%}
+    .comment-form input:focus,.comment-form textarea:focus{outline:none;border-color:var(--green)}
+    .comment-form textarea{resize:vertical;min-height:90px}
+    .comment-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .count{color:var(--muted);font-size:.85rem}
+    .cmsg{margin:12px 0;min-height:22px;font-size:.92rem}
+    .cmsg.ok{color:var(--green)}
+    .cmsg.err{color:#f87171}
+    .comment-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+    .comment-item{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+    .cmt-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+    .cmt-head small{color:var(--muted)}
+    .comment-item p{color:#cfd5e0;white-space:pre-wrap;word-break:break-word}
 
     @media(max-width:768px){
       .menu-toggle{display:block;margin-right:auto}
@@ -335,6 +352,22 @@
         <h3>روابط التحميل</h3>
         <div id="gLinks" class="links"></div>
       </section>
+
+      <section class="comments-box">
+        <h2>التعليقات</h2>
+        <form id="commentForm" class="comment-form" novalidate>
+          <input type="text" id="cName" placeholder="اسمك" maxlength="40" autocomplete="name">
+          <textarea id="cBody" placeholder="اكتب تعليقك عن اللعبة..." maxlength="500" rows="3"></textarea>
+          <!-- حقل مخفي للبوتات، الإنسان مش هيشوفه -->
+          <input type="text" id="cHoney" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
+          <div class="comment-actions">
+            <span id="cCount" class="count">0 / 500</span>
+            <button class="btn btn-green" id="cSubmit" type="submit">نشر التعليق</button>
+          </div>
+        </form>
+        <p id="cMsg" class="cmsg"></p>
+        <div id="commentList" class="comment-list"></div>
+      </section>
     </div>
   </div>
 
@@ -373,7 +406,9 @@
 <script>
 /* ============ إعدادات الصور والملفات ============ */
 const SUPABASE_URL = "https://mnrjvnxwnzkowcshkfxi.supabase.co";
-const BUCKET = "games"; // غيّره لاسم الـ bucket عندك
+const SUPABASE_KEY = "sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff";
+const BUCKET = "games";          // اسم الـ bucket اللي فيه الصور
+const VIDEO_BUCKET = "videos";   // اسم الـ bucket اللي فيه الفيديوهات
 const FALLBACK_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='100%25' height='100%25' fill='%231c2330'/%3E%3Ctext x='50%25' y='50%25' fill='%239aa4b5' font-family='Tahoma' font-size='56' text-anchor='middle' dominant-baseline='middle'%3EGameX%3C/text%3E%3C/svg%3E";
 
 function resolveUrl(v, bucket = BUCKET) {
@@ -383,8 +418,6 @@ function resolveUrl(v, bucket = BUCKET) {
   const path = v.replace(/^\/+/, "").replace(/^storage\/v1\/object\/public\/[^/]+\//, "");
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${encodeURI(path)}`;
 }
-
-const VIDEO_BUCKET = "videos"; // اسم الـ bucket اللي فيه الفيديوهات
 
 // يحوّل روابط YouTube و Vimeo لروابط embed
 function embedUrl(u) {
@@ -551,6 +584,8 @@ $("#gamesGrid").onclick = e => {
   const id = btn ? btn.dataset.open : card && card.dataset.id;
   if (id) location.hash = gameHref(id);
 };
+
+/* ============ الفيديو ============ */
 function renderMedia(g) {
   const media = $("#gMedia");
   const raw = g.video;
@@ -563,7 +598,7 @@ function renderMedia(g) {
 
   const embed = embedUrl(raw);
   if (embed) {
-    media.innerHTML = `<iframe src="${esc(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0"></iframe>`;
+    media.innerHTML = `<iframe src="${esc(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
     return;
   }
 
@@ -575,7 +610,7 @@ function renderMedia(g) {
     toast("تعذّر تشغيل الفيديو");
   });
 }
-  
+
 /* ============ صفحة اللعبة ============ */
 function showGame(g) {
   $("#homeView").hidden = true;
@@ -586,9 +621,8 @@ function showGame(g) {
   $("#gComment").textContent = g.desc || g.comment;
   document.title = g.title + " | GameX";
 
-    renderMedia(g);
+  renderMedia(g);
 
-  // زر التحميل الأخضر على الشمال
   const dl = $("#gDownload");
   if (g.links.length) {
     dl.href = g.links[0].url;
@@ -597,21 +631,19 @@ function showGame(g) {
     dl.hidden = true;
   }
 
-  // المواصفات تحت كلمة "تنزيل"
   $("#gSpecs").innerHTML = Object.entries(g.specs).map(([k, v]) =>
     `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")
     || "<p>لا توجد مواصفات مضافة.</p>";
 
-  // قائمة روابط التحميل
   $("#gLinks").innerHTML = g.links.length
     ? g.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.name)} <span>⬇</span></a>`).join("")
     : "<p>لا توجد روابط حالياً.</p>";
 
+  loadComments(g.id);
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 function showHome() {
-  // نوقف أي فيديو شغال لما نرجع
   const v = document.querySelector("#gMedia video");
   if (v) v.pause();
   $("#gMedia").innerHTML = "";
@@ -621,7 +653,7 @@ function showHome() {
   document.title = "GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة";
 }
 
-/* ============ الراوتر (التنقل بين الصفحات بالهاش) ============ */
+/* ============ الراوتر ============ */
 function route() {
   const h = decodeURIComponent(location.hash.slice(1));
 
@@ -679,6 +711,101 @@ document.addEventListener("keydown", e => {
   const k = e.key.toLowerCase();
   if ((e.ctrlKey || e.metaKey) && ["c", "x", "u", "s", "p", "a"].includes(k)) e.preventDefault();
 });
+
+/* ============ التعليقات ============ */
+const COMMENT_COOLDOWN_MS = 30000;
+let currentGameId = null;
+
+async function fetchComments(gameId) {
+  const url = `${SUPABASE_URL}/rest/v1/comments?select=id,name,body,created_at`
+    + `&game_id=eq.${encodeURIComponent(gameId)}&approved=eq.true&order=created_at.desc`;
+  const res = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
+  if (!res.ok) throw new Error("fetch failed");
+  return res.json();
+}
+
+async function postComment(gameId, name, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_KEY,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal"
+    },
+    body: JSON.stringify({ game_id: String(gameId), name, body })
+  });
+  if (!res.ok) throw new Error("post failed");
+}
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
+}
+
+function showCommentMsg(text, type) {
+  const m = $("#cMsg");
+  m.className = "cmsg " + (type || "");
+  m.textContent = text;
+}
+
+async function loadComments(gameId) {
+  currentGameId = String(gameId);
+  const list = $("#commentList");
+  list.innerHTML = `<p class="empty">جاري تحميل التعليقات...</p>`;
+  try {
+    const rows = await fetchComments(gameId);
+    if (String(gameId) !== currentGameId) return;
+    list.innerHTML = rows.length
+      ? rows.map(c => `
+          <div class="comment-item">
+            <div class="cmt-head">
+              <strong>${esc(c.name)}</strong>
+              <small>${fmtDate(c.created_at)}</small>
+            </div>
+            <p>${esc(c.body)}</p>
+          </div>`).join("")
+      : `<p class="empty">لا توجد تعليقات بعد، كن أول من يكتب.</p>`;
+  } catch (err) {
+    console.error(err);
+    list.innerHTML = `<p class="empty">تعذّر تحميل التعليقات.</p>`;
+  }
+}
+
+$("#cBody").addEventListener("input", e => {
+  $("#cCount").textContent = `${e.target.value.length} / 500`;
+});
+
+$("#commentForm").onsubmit = async e => {
+  e.preventDefault();
+  if ($("#cHoney").value) return;
+
+  const name = $("#cName").value.trim();
+  const body = $("#cBody").value.trim();
+
+  if (name.length < 2) return showCommentMsg("اكتب اسمك (حرفين على الأقل).", "err");
+  if (body.length < 3) return showCommentMsg("التعليق قصير قوي، اكتب كلام أكتر.", "err");
+
+  const last = +localStorage.getItem("gx_last_comment") || 0;
+  const wait = Math.ceil((COMMENT_COOLDOWN_MS - (Date.now() - last)) / 1000);
+  if (wait > 0) return showCommentMsg(`استنى ${wait} ثانية قبل ما تكتب تعليق تاني.`, "err");
+
+  const btn = $("#cSubmit");
+  btn.disabled = true;
+  showCommentMsg("جاري النشر...", "");
+
+  try {
+    await postComment(currentGameId, name, body);
+    localStorage.setItem("gx_last_comment", Date.now());
+    $("#commentForm").reset();
+    $("#cCount").textContent = "0 / 500";
+    showCommentMsg("تم نشر تعليقك، شكراً لك!", "ok");
+    loadComments(currentGameId);
+  } catch (err) {
+    console.error(err);
+    showCommentMsg("حصلت مشكلة في النشر، حاول تاني.", "err");
+  } finally {
+    btn.disabled = false;
+  }
+};
 
 /* ============ تحميل الألعاب من قاعدة البيانات ============ */
 async function init() {
