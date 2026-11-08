@@ -37,7 +37,7 @@
     @keyframes fill{to{width:100%}}
 
     #progress-bar{position:fixed;top:0;right:0;height:3px;width:0;background:var(--green);z-index:60}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none;max-width:90%}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none;max-width:90%;text-align:center}
     .toast.show{opacity:1;transform:translate(-50%,0)}
 
     /* الهيدر */
@@ -51,11 +51,11 @@
     #search:focus{outline:none;border-color:var(--green)}
 
     /* البانر */
-    .banner{position:relative;margin:20px auto 0;max-width:1200px;height:min(65vh,500px);border-radius:var(--radius);overflow:hidden;background:#000;cursor:pointer}
-    .banner .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+    .banner{position:relative;margin:20px auto 0;max-width:1200px;height:min(65vh,500px);border-radius:var(--radius);overflow:hidden;background:#000}
+    .banner .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s;cursor:pointer}
     .banner .slide.active{opacity:1}
     .banner .slide img{width:100%;height:100%;object-fit:cover}
-    .slide-info{position:absolute;inset:auto 0 0 0;padding:60px 30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.92))}
+    .slide-info{position:absolute;inset:auto 0 0 0;padding:60px 30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.92));pointer-events:none}
     .slide-info h2{font-size:clamp(1.4rem,4vw,2.4rem);margin-bottom:8px}
     .slide-info p{color:#d6dbe5;max-width:640px}
     .banner-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:1.6rem;cursor:pointer;z-index:3}
@@ -79,7 +79,7 @@
     .stat span{color:var(--muted);font-size:.9rem}
     .hero-actions{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 
-    .section-title{font-size:1.6rem;margin:50px 0 6px;text-align:center}
+    .section-title{font-size:1.6rem;margin:50px 0 6px;text-align:center;scroll-margin-top:90px}
     .section-sub{text-align:center;color:var(--muted);margin-bottom:24px}
     main{max-width:1200px;margin:auto;padding:0 5%}
 
@@ -120,8 +120,7 @@
     .btn-lg{padding:16px 30px;font-size:1.15rem;width:100%}
     .btn-sm{padding:8px 12px;font-size:.9rem}
     .btn.disabled{opacity:.5;pointer-events:none;background:var(--card2);color:var(--muted)}
-    .link-sm{color:var(--muted);font-size:.9rem;text-decoration:underline}
-    .link-sm:hover{color:var(--green)}
+    .link-sm{color:var(--green);text-decoration:underline}
 
     /* الخطوات والمميزات */
     .steps{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
@@ -185,6 +184,7 @@
 
     .panel{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
     .panel h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:1.3rem}
+    .panel h3{margin:24px 0 12px;font-size:1.1rem}
     .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
     .spec{background:var(--bg);padding:12px 14px;border-radius:10px;display:flex;justify-content:space-between;gap:10px}
     .spec span{color:var(--muted)}
@@ -192,7 +192,6 @@
     .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
     .links a:hover{border-color:var(--green)}
     .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-    .related-grid .game-card img{aspect-ratio:16/9}
 
     /* التعليقات */
     .comment-form{display:flex;flex-direction:column;gap:10px}
@@ -255,8 +254,8 @@
 
     <section class="banner" id="banner" aria-label="الألعاب المميزة" hidden>
       <div id="slides"></div>
-      <button class="banner-nav" id="prevSlide" aria-label="السابقة">‹</button>
-      <button class="banner-nav" id="nextSlide" aria-label="التالية">›</button>
+      <button class="banner-nav" id="prevSlide" data-nav="-1" aria-label="السابقة">‹</button>
+      <button class="banner-nav" id="nextSlide" data-nav="1" aria-label="التالية">›</button>
       <div class="dots" id="dots"></div>
       <div class="banner-bar"><span id="bannerBar"></span></div>
     </section>
@@ -332,7 +331,7 @@
       </details>
       <details>
         <summary>ليه بعض الروابط مش شغالة؟</summary>
-        <p>الروابط بتتحدث باستمرار. لو لقيت رابط مش شغال، اضغط "الإبلاغ عن رابط معطل" في صفحة اللعبة، أو تواصل معانا.</p>
+        <p>الروابط بتتحدث باستمرار. لو لقيت رابط مش شغال، اضغط "ابلغنا هنا" في صفحة اللعبة، أو تواصل معانا.</p>
       </details>
       <details>
         <summary>إزاي أشغّل اللعبة بعد التحميل؟</summary>
@@ -394,7 +393,7 @@
       <section class="panel">
         <h2>تنزيل والمواصفات</h2>
         <div class="spec-grid" id="gSpecs"></div>
-        <h3 style="margin:24px 0 12px;font-size:1.1rem">روابط التحميل</h3>
+        <h3>روابط التحميل</h3>
         <div id="gLinks" class="links"></div>
       </section>
 
@@ -470,13 +469,14 @@ const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
+const safeDecode = s => { try { return decodeURIComponent(s); } catch { return s; } };
 
 function toast(msg) {
   const t = $("#toast");
   t.textContent = msg;
   t.classList.add("show");
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => t.classList.remove("show"), 2400);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2800);
 }
 
 function resolveUrl(v, bucket = BUCKET) {
@@ -514,8 +514,10 @@ document.addEventListener("error", e => {
 
 /* ============ الحالة ============ */
 const state = {
-  games: [], loaded: false, cat: "الكل", q: "", sort: "default", favOnly: false,
-  banner: [], slide: 0, slideTimer: null, current: null, commentGameId: null
+  games: [], loaded: false, loadError: "",
+  cat: "الكل", q: "", sort: "default", favOnly: false,
+  banner: [], slide: 0, slideTimer: null,
+  current: null, commentGameId: null
 };
 let favs = new Set(store.get("gx_fav", []).map(String));
 let views = store.get("gx_views", {});
@@ -586,10 +588,14 @@ function renderStats() {
 function renderBanner() {
   const featured = state.games.filter(g => g.featured);
   state.banner = featured.length ? featured : state.games.slice(0, 5);
-  if (!state.banner.length) { $("#banner").hidden = true; return; }
+  if (!state.banner.length) {
+    $("#banner").hidden = true;
+    clearTimeout(state.slideTimer);
+    return;
+  }
   $("#banner").hidden = false;
   $("#slides").innerHTML = state.banner.map((g, i) => `
-    <div class="slide${i === 0 ? " active" : ""}" data-id="${esc(g.id)}">
+    <div class="slide${i === 0 ? " active" : ""}" data-open="${esc(g.id)}">
       <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}">
       <div class="slide-info">
         <h2>${esc(g.title)}</h2>
@@ -597,43 +603,25 @@ function renderBanner() {
       </div>
     </div>`).join("");
   $("#dots").innerHTML = state.banner.map((_, i) =>
-    `<button class="dot${i === 0 ? " active" : ""}" data-i="${i}" aria-label="شريحة ${i + 1}"></button>`).join("");
-  state.slide = 0;
-  startSlides();
+    `<button class="dot${i === 0 ? " active" : ""}" data-dot="${i}" aria-label="شريحة ${i + 1}"></button>`).join("");
+  showSlide(0);
 }
 
 function showSlide(i) {
   const n = state.banner.length;
   if (!n) return;
-  state.slide = (i + n) % n;
+  state.slide = ((i % n) + n) % n;
   document.querySelectorAll("#slides .slide").forEach((s, k) => s.classList.toggle("active", k === state.slide));
   document.querySelectorAll(".dot").forEach((d, k) => d.classList.toggle("active", k === state.slide));
-  restartBannerBar();
-}
 
-function restartBannerBar() {
   const bar = $("#bannerBar");
   bar.classList.remove("run");
   void bar.offsetWidth;
   bar.classList.add("run");
+
   clearTimeout(state.slideTimer);
   state.slideTimer = setTimeout(() => showSlide(state.slide + 1), SLIDE_MS);
 }
-
-function startSlides() {
-  showSlide(0);
-}
-
-$("#nextSlide").onclick = e => { e.stopPropagation(); showSlide(state.slide + 1); };
-$("#prevSlide").onclick = e => { e.stopPropagation(); showSlide(state.slide - 1); };
-$("#dots").onclick = e => {
-  const d = e.target.closest(".dot");
-  if (d) { e.stopPropagation(); showSlide(+d.dataset.i); }
-};
-$("#banner").onclick = e => {
-  const s = e.target.closest(".slide");
-  if (s) openGame(s.dataset.id);
-};
 
 /* ============ الفلاتر والبحث ============ */
 function renderCategories() {
@@ -684,32 +672,11 @@ function renderGrid() {
   observeReveal();
 }
 
-$("#categories").onclick = e => {
-  const c = e.target.closest(".chip");
-  if (!c) return;
-  state.cat = c.dataset.cat;
-  renderCategories();
-  renderGrid();
-};
-$("#favOnly").onclick = () => { state.favOnly = !state.favOnly; renderGrid(); };
 $("#sortSelect").onchange = e => { state.sort = e.target.value; renderGrid(); };
 $("#search").oninput = e => {
   state.q = e.target.value.trim();
   if (!$("#gameView").hidden) location.hash = "games";
   renderGrid();
-};
-
-$("#gamesGrid").onclick = e => {
-  const f = e.target.closest("[data-fav]");
-  if (f) { e.stopPropagation(); toggleFav(f.dataset.fav); return; }
-  const o = e.target.closest("[data-open]");
-  if (o) openGame(o.dataset.open);
-};
-
-$("#randomBtn").onclick = () => {
-  if (!state.games.length) return toast("مفيش ألعاب متاحة حالياً");
-  const g = state.games[Math.floor(Math.random() * state.games.length)];
-  openGame(g.id);
 };
 
 /* ============ الفيديو (كبير على اليمين) ============ */
@@ -741,15 +708,14 @@ function renderMedia(g) {
 function updateFavBtn() {
   const g = state.current;
   if (!g) return;
-  const isFav = favs.has(g.id);
-  $("#gFav").textContent = isFav ? "♥ في المفضلة" : "♡ أضف للمفضلة";
+  $("#gFav").textContent = favs.has(g.id) ? "♥ في المفضلة" : "♡ أضف للمفضلة";
 }
 
-async function shareGame(g) {
+async function shareGame() {
   const url = location.href;
   try {
-    if (navigator.share) { await navigator.share({ title: g.title, url }); return; }
-  } catch { /* المستخدم لغى المشاركة */ }
+    if (navigator.share) { await navigator.share({ title: state.current?.title || "GameX", url }); return; }
+  } catch { return; }
   try {
     await navigator.clipboard.writeText(url);
     toast("تم نسخ رابط اللعبة");
@@ -763,14 +729,25 @@ function showGame(id) {
   $("#gameView").hidden = false;
 
   if (!state.loaded) {
-    $("#gTitle").textContent = "جاري التحميل...";
+    $("#gTitle").textContent = "جاري تحميل اللعبة...";
     return;
   }
 
   const g = state.games.find(x => x.id === String(id));
   if (!g) {
-    toast("اللعبة دي مش موجودة");
-    location.hash = "top";
+    state.current = null;
+    $("#gMedia").innerHTML = "";
+    $("#gCat").textContent = "";
+    $("#gTitle").textContent = state.loadError ? "تعذّر تحميل الألعاب" : "اللعبة دي مش موجودة";
+    $("#gDesc").textContent = state.loadError
+      ? "الألعاب ما اتحمّلتش من قاعدة البيانات. راجع صلاحيات جدول games في Supabase."
+      : "ارجع للرئيسية واختار لعبة من المكتبة.";
+    $("#gDownload").removeAttribute("href");
+    $("#gDownload").classList.add("disabled");
+    $("#gSpecs").innerHTML = "";
+    $("#gLinks").innerHTML = "";
+    $("#gRelated").innerHTML = "";
+    $("#commentList").innerHTML = "";
     return;
   }
 
@@ -805,28 +782,25 @@ function showGame(id) {
     ? g.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.name)} <span>⬇</span></a>`).join("")
     : "<p>لا توجد روابط حالياً.</p>";
 
-  const related = state.games
-    .filter(x => x.id !== g.id && x.cat === g.cat)
-    .slice(0, 4);
+  const related = state.games.filter(x => x.id !== g.id && x.cat === g.cat).slice(0, 4);
   $("#gRelated").innerHTML = related.length
     ? related.map(cardHTML).join("")
     : "<p>لا توجد ألعاب مشابهة حالياً.</p>";
-  observeReveal();
 
   bumpView(g.id);
   loadComments(g.id);
+  observeReveal();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-$("#gFav").onclick = () => { if (state.current) toggleFav(state.current.id); };
-$("#gShare").onclick = () => { if (state.current) shareGame(state.current); };
-
 /* ============ الراوتر ============ */
 function openGame(id) {
-  location.hash = "game/" + encodeURIComponent(id);
+  const newHash = "game/" + encodeURIComponent(id);
+  if (location.hash.slice(1) === newHash) route();
+  else location.hash = newHash;
 }
 
-function showHome(h) {
+function showHome(anchor) {
   const v = document.querySelector("#gMedia video");
   if (v) v.pause();
   $("#gMedia").innerHTML = "";
@@ -834,23 +808,64 @@ function showHome(h) {
   $("#homeView").hidden = false;
   document.title = DEFAULT_TITLE;
 
-  if (!h || h === "top") {
+  if (!anchor || anchor === "top") {
     window.scrollTo({ top: 0, behavior: "auto" });
   } else {
-    const el = document.getElementById(h);
+    const el = document.getElementById(anchor);
     if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 50);
   }
 }
 
 function route() {
-  const h = decodeURIComponent(location.hash.slice(1));
-  if (h.startsWith("game/")) {
-    showGame(h.slice(5));
-  } else {
-    showHome(h);
-  }
+  const h = safeDecode(location.hash.slice(1));
+  if (h.startsWith("game/")) showGame(h.slice(5));
+  else showHome(h);
 }
 window.addEventListener("hashchange", route);
+
+/* ============ معالج الضغط الموحد ============ */
+document.addEventListener("click", e => {
+  const t = e.target;
+
+  const fav = t.closest("[data-fav]");
+  if (fav) { e.preventDefault(); toggleFav(fav.dataset.fav); return; }
+
+  const open = t.closest("[data-open]");
+  if (open) { e.preventDefault(); openGame(open.dataset.open); return; }
+
+  const cat = t.closest("[data-cat]");
+  if (cat) {
+    state.cat = cat.dataset.cat;
+    renderCategories();
+    renderGrid();
+    return;
+  }
+
+  const dot = t.closest("[data-dot]");
+  if (dot) { showSlide(+dot.dataset.dot); return; }
+
+  const nav = t.closest("[data-nav]");
+  if (nav) { showSlide(state.slide + Number(nav.dataset.nav)); return; }
+
+  if (t.closest("#favOnly")) {
+    state.favOnly = !state.favOnly;
+    renderGrid();
+    return;
+  }
+
+  if (t.closest("#randomBtn")) {
+    if (!state.games.length) return toast("مفيش ألعاب متاحة حالياً");
+    openGame(state.games[Math.floor(Math.random() * state.games.length)].id);
+    return;
+  }
+
+  if (t.closest("#gFav")) { if (state.current) toggleFav(state.current.id); return; }
+  if (t.closest("#gShare")) { shareGame(); return; }
+
+  if (t.closest("#mainNav a")) $("#mainNav").classList.remove("open");
+});
+
+$("#menuToggle").onclick = () => $("#mainNav").classList.toggle("open");
 
 /* ============ النشرة البريدية ============ */
 $("#newsletter").onsubmit = e => {
@@ -866,10 +881,6 @@ $("#newsletter").onsubmit = e => {
   msg.textContent = "تم الاشتراك، شكراً لك!";
   e.target.reset();
 };
-
-/* ============ القائمة للموبايل ============ */
-$("#menuToggle").onclick = () => $("#mainNav").classList.toggle("open");
-$("#mainNav").onclick = e => { if (e.target.tagName === "A") $("#mainNav").classList.remove("open"); };
 
 /* ============ ظهور العناصر عند السكرول ============ */
 const revealIO = new IntersectionObserver(entries => {
@@ -982,20 +993,21 @@ $("#commentForm").onsubmit = async e => {
 /* ============ التشغيل ============ */
 async function init() {
   try {
+    if (typeof GameXDB === "undefined") throw new Error("ملف db.js مش متحمّل");
     const rows = await GameXDB.getGames();
-    state.games = rows.map(normalize);
+    state.games = (rows || []).filter(Boolean).map(normalize);
   } catch (err) {
-    console.error(err);
-    toast("تعذّر تحميل الألعاب: " + err.message);
+    console.error("تحميل الألعاب فشل:", err);
+    state.loadError = err.message || "خطأ غير معروف";
     state.games = [];
+    toast("تعذّر تحميل الألعاب: " + state.loadError);
   }
   state.loaded = true;
   renderStats();
   renderBanner();
   renderCategories();
   renderGrid();
-  observeReveal();
-  route();
+  route(); // يفتح الصفحة الصح حسب الرابط بعد ما الداتا تتحمّل
 }
 
 init();
