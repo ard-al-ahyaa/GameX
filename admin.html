@@ -43,10 +43,16 @@
       border: 1px dashed var(--border-2); border-radius: 12px; padding: 10px;
       background: var(--bg-2); min-height: 120px;
     }
-    .preview-box img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; }
     .preview-box .video-frame { border-radius: 8px; overflow: hidden; }
     .video-frame { position: relative; width: 100%; aspect-ratio: 16/9; }
     .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; }
+
+    /* ===== التحكم في الجزء الظاهر من الصورة ===== */
+    .crop-stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;cursor:crosshair;user-select:none}
+    .crop-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .15s}
+    .crop-dot{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #fff;background:rgba(34,197,94,.6);transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.5)}
+    .crop-tools{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:10px}
+    .crop-tools input[type=range]{width:100%;accent-color:var(--accent)}
 
     .alert {
       display: none; padding: 12px 16px; border-radius: 10px; margin-top: 14px;
@@ -89,20 +95,6 @@
     .login-wrap { min-height: 80vh; display: grid; place-items: center; padding: 20px; }
     .login-card { width: 100%; max-width: 380px; }
     .login-card input { margin-top: 6px; }
-
-    /* ===== التحكم في الصورة ===== */
-    .crop-stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;cursor:crosshair;user-select:none}
-    .crop-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .15s}
-    .crop-dot{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #fff;background:rgba(34,197,94,.6);transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.5)}
-    .crop-tools{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:10px}
-    .crop-tools input[type=range]{width:100%;accent-color:var(--accent)}
-
-    /* ===== التعليقات ===== */
-    .comments-admin .c-row{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--border-2);border-radius:10px;background:var(--panel-2);margin-bottom:10px}
-    .comments-admin .c-body{flex:1;min-width:0}
-    .comments-admin .c-body p{white-space:pre-wrap;word-break:break-word;margin:4px 0}
-    .c-meta{color:var(--muted);font-size:.82rem}
-    .tag.hidden-c{background:rgba(248,81,73,.15);color:#ffb4ae}
 
     @media (max-width: 900px) { .kpis { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
@@ -179,8 +171,8 @@
         </label>
 
         <div class="full panel" style="margin:0">
-          <h2 style="font-size:1rem">🎯 التحكم في الجزء الظاهر من الصورة</h2>
-          <p class="hint" style="margin-bottom:10px">اضغط على الصورة في المربع عشان تحدد النقطة المهمة (زي الكروت والبانر بالظبط)</p>
+          <h2 style="font-size:1rem">🎯 الجزء الظاهر من الصورة</h2>
+          <p class="hint" style="margin-bottom:10px">اضغط على الصورة عشان تحدد النقطة المهمة (زي الكروت والبانر بالظبط)</p>
           <div class="crop-stage" id="cropStage">
             <img id="cropImg" src="" alt="" hidden>
             <span class="crop-dot" id="cropDot" hidden></span>
@@ -260,20 +252,6 @@
         </table>
       </div>
     </section>
-
-    <!-- ===== التعليقات ===== -->
-    <section class="panel">
-      <h2>💬 التعليقات (<span id="cCount2">0</span>)</h2>
-      <div class="table-tools">
-        <select id="cFilter" class="sort-select" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border-2);border-radius:10px;padding:8px 12px">
-          <option value="all">كل التعليقات</option>
-          <option value="visible">الظاهرة فقط</option>
-          <option value="hidden">المخفية فقط</option>
-        </select>
-        <button class="btn btn-muted btn-sm" id="cRefresh">🔄 تحديث</button>
-      </div>
-      <div class="comments-admin" id="commentsAdmin"></div>
-    </section>
   </main>
 
   <script src="db.js"></script>
@@ -323,6 +301,10 @@
       box.innerHTML = msgs.map(m => '• ' + esc(m)).join('<br>');
     }
     function hideAlert() { $('#formAlert').className = 'alert'; }
+    function posStyle(g) {
+      const [x, y] = String(g.imgPos || '50,50').split(',').map(Number);
+      return `object-position:${x || 50}% ${y || 50}%`;
+    }
 
     /* ---------- تحميل وتحديث ---------- */
     async function refresh() {
@@ -364,7 +346,7 @@
       $('#bannerList').innerHTML = list.map((g, i) => `
         <div class="banner-item">
           <span class="num">${i + 1}</span>
-          <img src="${esc(g.image)}" alt="" style="object-position:${esc(g.imgPos || '50,50').replace(/^(\d+),(\d+)$/, '$1% $2%')}">
+          <img src="${esc(g.image)}" alt="" style="${posStyle(g)}">
           <strong style="flex:1">${esc(g.title)}</strong>
           <button class="btn btn-muted btn-sm" data-unfeature="${esc(g.id)}">إزالة من البانر</button>
         </div>`).join('') || '<p class="hint">لا توجد ألعاب في البانر حالياً. فعّل خيار "عرض اللعبة في البانر" من النموذج.</p>';
@@ -377,7 +359,7 @@
       $('#count').textContent = list.length;
       $('#rows').innerHTML = list.map(g => `
         <tr>
-          <td><img src="${esc(g.image)}" alt="" style="object-position:${esc(g.imgPos || '50,50').replace(/^(\d+),(\d+)$/, '$1% $2%')}"></td>
+          <td><img src="${esc(g.image)}" alt="" style="${posStyle(g)}"></td>
           <td><strong>${esc(g.title)}</strong><div class="hint">${esc(g.size || '')} ${g.version ? 'v' + esc(g.version) : ''}</div></td>
           <td>${esc(g.category)}</td>
           <td>${g.featured ? `<span class="tag star">⭐ ${g.featuredOrder || 0}</span>` : '<span class="tag no">لا</span>'}</td>
@@ -429,22 +411,17 @@
       reader.readAsDataURL(file);
     });
 
-    /* ---------- التحكم في الصورة (الجزء الظاهر) ---------- */
+    /* ---------- التحكم في الجزء الظاهر من الصورة ---------- */
     const cropStage = $('#cropStage');
     const cropImg = $('#cropImg');
     const cropDot = $('#cropDot');
 
-    function parsePos(p) {
-      const [x, y] = String(p || '50,50').split(',').map(Number);
-      return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
-    }
-
     function applyCrop() {
-      const { x, y } = parsePos($('#f-imgpos').value);
+      const [x, y] = ($('#f-imgpos').value || '50,50').split(',').map(Number);
       const z = Number($('#f-zoomval').value) || 100;
       cropImg.style.objectPosition = `${x}% ${y}%`;
-      cropImg.style.transform = `scale(${z / 100})`;
       cropImg.style.transformOrigin = `${x}% ${y}%`;
+      cropImg.style.transform = `scale(${z / 100})`;
       cropDot.style.left = x + '%';
       cropDot.style.top = y + '%';
       $('#zoomVal').textContent = z;
@@ -467,9 +444,9 @@
     cropStage.addEventListener('click', e => {
       if (cropImg.hidden) return;
       const r = cropStage.getBoundingClientRect();
-      const x = Math.round(((e.clientX - r.left) / r.width) * 100);
-      const y = Math.round(((e.clientY - r.top) / r.height) * 100);
-      $('#f-imgpos').value = `${Math.min(100, Math.max(0, x))},${Math.min(100, Math.max(0, y))}`;
+      const x = Math.min(100, Math.max(0, Math.round(((e.clientX - r.left) / r.width) * 100)));
+      const y = Math.min(100, Math.max(0, Math.round(((e.clientY - r.top) / r.height) * 100)));
+      $('#f-imgpos').value = `${x},${y}`;
       applyCrop();
     });
 
@@ -650,99 +627,11 @@
       e.target.value = '';
     });
 
-    /* ---------- التعليقات ---------- */
-    let allComments = [];
-    const SB_URL = (DB && DB.baseUrl) || 'https://mnrjvnxwnzkowcshkfxi.supabase.co';
-    const SB_KEY = 'sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff';
-
-    function adminHeaders(extra) {
-      const token = sessionStorage.getItem('gamex_token');
-      return Object.assign({
-        apikey: SB_KEY,
-        Authorization: 'Bearer ' + (token || SB_KEY),
-        'Content-Type': 'application/json'
-      }, extra || {});
-    }
-
-    async function loadAllComments() {
-      const res = await fetch(`${SB_URL}/rest/v1/comments?select=id,game_id,name,body,approved,created_at&order=created_at.desc`, { headers: adminHeaders() });
-      if (!res.ok) throw new Error('تعذّر تحميل التعليقات (' + res.status + ')');
-      allComments = await res.json();
-      renderComments();
-    }
-
-    function gameTitle(id) {
-      const g = games.find(x => String(x.id) === String(id));
-      return g ? g.title : 'لعبة محذوفة (' + id + ')';
-    }
-
-    function renderComments() {
-      const f = $('#cFilter').value;
-      const list = allComments.filter(c =>
-        f === 'all' || (f === 'visible' ? c.approved : !c.approved));
-      $('#cCount2').textContent = allComments.length;
-      $('#commentsAdmin').innerHTML = list.map(c => `
-        <div class="c-row">
-          <div class="c-body">
-            <div class="c-meta">
-              <strong>${esc(c.name)}</strong> على
-              <span style="color:var(--accent)">${esc(gameTitle(c.game_id))}</span>
-              · ${new Date(c.created_at).toLocaleString('ar-EG')}
-              ${c.approved ? '' : '<span class="tag hidden-c">مخفي</span>'}
-            </div>
-            <p>${esc(c.body)}</p>
-          </div>
-          <div class="row-actions">
-            <button class="btn btn-muted btn-sm" data-cmt-toggle="${esc(c.id)}">${c.approved ? 'إخفاء' : 'إظهار'}</button>
-            <button class="btn btn-danger btn-sm" data-cmt-del="${esc(c.id)}">حذف</button>
-          </div>
-        </div>`).join('') || '<p class="hint">مفيش تعليقات في الفلتر ده.</p>';
-    }
-
-    async function setCommentApproved(id, approved) {
-      const res = await fetch(`${SB_URL}/rest/v1/comments?id=eq.${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        headers: adminHeaders({ Prefer: 'return=minimal' }),
-        body: JSON.stringify({ approved })
-      });
-      if (!res.ok) throw new Error('فشل التعديل (' + res.status + ')');
-    }
-
-    async function deleteComment(id) {
-      const res = await fetch(`${SB_URL}/rest/v1/comments?id=eq.${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-        headers: adminHeaders({ Prefer: 'return=minimal' })
-      });
-      if (!res.ok) throw new Error('فشل الحذف (' + res.status + ')');
-    }
-
-    $('#cFilter').addEventListener('change', renderComments);
-    $('#cRefresh').addEventListener('click', () => loadAllComments().catch(e => alert(e.message)));
-
-    $('#commentsAdmin').addEventListener('click', async e => {
-      const tg = e.target.closest('[data-cmt-toggle]');
-      const dl = e.target.closest('[data-cmt-del]');
-      try {
-        if (tg) {
-          const c = allComments.find(x => String(x.id) === tg.dataset.cmtToggle);
-          await setCommentApproved(c.id, !c.approved);
-          c.approved = !c.approved;
-          renderComments();
-        }
-        if (dl && confirm('تحذف التعليق ده نهائياً؟')) {
-          await deleteComment(dl.dataset.cmtDel);
-          allComments = allComments.filter(x => String(x.id) !== dl.dataset.cmtDel);
-          renderComments();
-        }
-      } catch (err) { alert(err.message); }
-    });
-
     /* ---------- الدخول والخروج ---------- */
     async function showApp() {
       $('#login').hidden = true;
       $('#app').hidden = false;
       await refresh();
-      loadAllComments().catch(e => console.error(e));
     }
 
     $('#loginBtn').addEventListener('click', async () => {
@@ -767,6 +656,7 @@
     });
 
     if (DB.isLoggedIn()) showApp();
+
   </script>
 </body>
 </html>
