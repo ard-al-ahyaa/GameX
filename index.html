@@ -551,7 +551,31 @@ $("#gamesGrid").onclick = e => {
   const id = btn ? btn.dataset.open : card && card.dataset.id;
   if (id) location.hash = gameHref(id);
 };
+function renderMedia(g) {
+  const media = $("#gMedia");
+  const raw = g.video;
+  const poster = g.img || FALLBACK_IMG;
 
+  if (!raw) {
+    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
+    return;
+  }
+
+  const embed = embedUrl(raw);
+  if (embed) {
+    media.innerHTML = `<iframe src="${esc(embed)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0"></iframe>`;
+    return;
+  }
+
+  const src = resolveUrl(raw, VIDEO_BUCKET);
+  media.innerHTML = `<video src="${esc(src)}" poster="${esc(poster)}" controls controlsList="nodownload" playsinline></video>`;
+  const v = media.querySelector("video");
+  v.addEventListener("error", () => {
+    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
+    toast("تعذّر تشغيل الفيديو");
+  });
+}
+  
 /* ============ صفحة اللعبة ============ */
 function showGame(g) {
   $("#homeView").hidden = true;
@@ -562,13 +586,7 @@ function showGame(g) {
   $("#gComment").textContent = g.desc || g.comment;
   document.title = g.title + " | GameX";
 
-  // الفيديو على اليمين، ولو مفيش فيديو نعرض الصورة
-  const media = $("#gMedia");
-  if (g.video) {
-    media.innerHTML = `<video src="${esc(g.video)}" poster="${esc(g.img)}" controls controlsList="nodownload" playsinline></video>`;
-  } else {
-    media.innerHTML = `<img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}">`;
-  }
+    renderMedia(g);
 
   // زر التحميل الأخضر على الشمال
   const dl = $("#gDownload");
