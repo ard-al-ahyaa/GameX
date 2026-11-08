@@ -376,12 +376,23 @@ const SUPABASE_URL = "https://mnrjvnxwnzkowcshkfxi.supabase.co";
 const BUCKET = "games"; // غيّره لاسم الـ bucket عندك
 const FALLBACK_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='100%25' height='100%25' fill='%231c2330'/%3E%3Ctext x='50%25' y='50%25' fill='%239aa4b5' font-family='Tahoma' font-size='56' text-anchor='middle' dominant-baseline='middle'%3EGameX%3C/text%3E%3C/svg%3E";
 
-function resolveUrl(v) {
+function resolveUrl(v, bucket = BUCKET) {
   if (!v) return "";
   v = String(v).trim();
   if (/^(https?:|data:|blob:)/i.test(v)) return v;
   const path = v.replace(/^\/+/, "").replace(/^storage\/v1\/object\/public\/[^/]+\//, "");
-  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${encodeURI(path)}`;
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${encodeURI(path)}`;
+}
+
+const VIDEO_BUCKET = "videos"; // اسم الـ bucket اللي فيه الفيديوهات
+
+// يحوّل روابط YouTube و Vimeo لروابط embed
+function embedUrl(u) {
+  const yt = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vm = u.match(/vimeo\.com\/(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return null;
 }
 
 // لو صورة فشلت، نعرض الاحتياطية (مرة واحدة)
@@ -655,19 +666,23 @@ document.addEventListener("keydown", e => {
 async function init() {
   try {
     const list = await GameXDB.getGames();
-    GAMES = list.map(g => ({
-      ...g,
-      id: g.id,
-      title: g.title || "",
-      cat: g.cat || "عام",
-      img: resolveUrl(g.img || g.image || g.cover || g.poster),
-      video: resolveUrl(g.video),
-      comment: g.comment || "",
-      desc: g.desc || "",
-      featured: !!g.featured,
-      specs: g.specs || {},
-      links: Array.isArray(g.links) ? g.links : []
-    }));
+    GAMES = list.map(g => {
+      const rawVideo = g.video || g.videoUrl || g.video_url || g.trailer || "";
+      const rawDesc = g.desc || g.description || g.details || g.about || g.summary || "";
+      return {
+        ...g,
+        id: g.id,
+        title: g.title || g.name || "",
+        cat: g.cat || g.category || "عام",
+        img: resolveUrl(g.img || g.image || g.cover || g.poster),
+        video: String(rawVideo).trim(),
+        comment: g.comment || rawDesc,
+        desc: rawDesc,
+        featured: !!g.featured,
+        specs: g.specs || {},
+        links: Array.isArray(g.links) ? g.links : []
+      };
+    });
   } catch (err) {
     console.error(err);
     toast("تعذّر تحميل الألعاب: " + err.message);
@@ -679,7 +694,7 @@ async function init() {
   renderGrid();
   showSlide(0);
   observeReveal();
-  route(); // يفتح الصفحة الصح حسب الرابط (لو فيه لعبة في الهاش، تفتحها مباشرة)
+  route();
 }
 
 init();
