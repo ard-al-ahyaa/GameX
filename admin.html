@@ -45,6 +45,8 @@
     }
     .preview-box img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; }
     .preview-box .video-frame { border-radius: 8px; overflow: hidden; }
+    .video-frame { position: relative; width: 100%; aspect-ratio: 16/9; }
+    .video-frame iframe, .video-frame video { width: 100%; height: 100%; border: 0; }
 
     .alert {
       display: none; padding: 12px 16px; border-radius: 10px; margin-top: 14px;
@@ -87,6 +89,20 @@
     .login-wrap { min-height: 80vh; display: grid; place-items: center; padding: 20px; }
     .login-card { width: 100%; max-width: 380px; }
     .login-card input { margin-top: 6px; }
+
+    /* ===== التحكم في الصورة ===== */
+    .crop-stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;cursor:crosshair;user-select:none}
+    .crop-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .15s}
+    .crop-dot{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #fff;background:rgba(34,197,94,.6);transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.5)}
+    .crop-tools{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:10px}
+    .crop-tools input[type=range]{width:100%;accent-color:var(--accent)}
+
+    /* ===== التعليقات ===== */
+    .comments-admin .c-row{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--border-2);border-radius:10px;background:var(--panel-2);margin-bottom:10px}
+    .comments-admin .c-body{flex:1;min-width:0}
+    .comments-admin .c-body p{white-space:pre-wrap;word-break:break-word;margin:4px 0}
+    .c-meta{color:var(--muted);font-size:.82rem}
+    .tag.hidden-c{background:rgba(248,81,73,.15);color:#ffb4ae}
 
     @media (max-width: 900px) { .kpis { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
@@ -160,8 +176,24 @@
         </label>
         <label class="field">رفع صورة من الجهاز (تُضغط تلقائياً)
           <input type="file" id="f-imgfile" accept="image/*">
-          <div class="preview-box" style="margin-top:6px"><img id="imgPreview" alt="" hidden></div>
         </label>
+
+        <div class="full panel" style="margin:0">
+          <h2 style="font-size:1rem">🎯 التحكم في الجزء الظاهر من الصورة</h2>
+          <p class="hint" style="margin-bottom:10px">اضغط على الصورة في المربع عشان تحدد النقطة المهمة (زي الكروت والبانر بالظبط)</p>
+          <div class="crop-stage" id="cropStage">
+            <img id="cropImg" src="" alt="" hidden>
+            <span class="crop-dot" id="cropDot" hidden></span>
+          </div>
+          <div class="crop-tools">
+            <label class="field" style="margin:0">التكبير: <span id="zoomVal">100</span>%
+              <input type="range" id="f-zoom" min="100" max="250" step="5" value="100">
+            </label>
+            <button type="button" class="btn btn-muted btn-sm" id="cropReset">إعادة التعيين</button>
+          </div>
+          <input type="hidden" id="f-imgpos" value="50,50">
+          <input type="hidden" id="f-zoomval" value="100">
+        </div>
 
         <label class="field full">رابط الفيديو (يوتيوب أو ملف mp4)
           <input type="url" id="f-video" placeholder="https://www.youtube.com/watch?v=...">
@@ -227,6 +259,20 @@
           <tbody id="rows"></tbody>
         </table>
       </div>
+    </section>
+
+    <!-- ===== التعليقات ===== -->
+    <section class="panel">
+      <h2>💬 التعليقات (<span id="cCount2">0</span>)</h2>
+      <div class="table-tools">
+        <select id="cFilter" class="sort-select" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border-2);border-radius:10px;padding:8px 12px">
+          <option value="all">كل التعليقات</option>
+          <option value="visible">الظاهرة فقط</option>
+          <option value="hidden">المخفية فقط</option>
+        </select>
+        <button class="btn btn-muted btn-sm" id="cRefresh">🔄 تحديث</button>
+      </div>
+      <div class="comments-admin" id="commentsAdmin"></div>
     </section>
   </main>
 
@@ -318,7 +364,7 @@
       $('#bannerList').innerHTML = list.map((g, i) => `
         <div class="banner-item">
           <span class="num">${i + 1}</span>
-          <img src="${esc(g.image)}" alt="">
+          <img src="${esc(g.image)}" alt="" style="object-position:${esc(g.imgPos || '50,50').replace(/^(\d+),(\d+)$/, '$1% $2%')}">
           <strong style="flex:1">${esc(g.title)}</strong>
           <button class="btn btn-muted btn-sm" data-unfeature="${esc(g.id)}">إزالة من البانر</button>
         </div>`).join('') || '<p class="hint">لا توجد ألعاب في البانر حالياً. فعّل خيار "عرض اللعبة في البانر" من النموذج.</p>';
@@ -331,7 +377,7 @@
       $('#count').textContent = list.length;
       $('#rows').innerHTML = list.map(g => `
         <tr>
-          <td><img src="${esc(g.image)}" alt=""></td>
+          <td><img src="${esc(g.image)}" alt="" style="object-position:${esc(g.imgPos || '50,50').replace(/^(\d+),(\d+)$/, '$1% $2%')}"></td>
           <td><strong>${esc(g.title)}</strong><div class="hint">${esc(g.size || '')} ${g.version ? 'v' + esc(g.version) : ''}</div></td>
           <td>${esc(g.category)}</td>
           <td>${g.featured ? `<span class="tag star">⭐ ${g.featuredOrder || 0}</span>` : '<span class="tag no">لا</span>'}</td>
@@ -359,14 +405,8 @@
         : `<div class="video-frame"><video src="${esc(v.src)}" controls></video></div>`;
     }
 
-    function updateImagePreview(src) {
-      const img = $('#imgPreview');
-      if (src && (src.startsWith('data:') || isHttp(src))) { img.src = src; img.hidden = false; }
-      else { img.hidden = true; img.removeAttribute('src'); }
-    }
-
     $('#f-video').addEventListener('input', updateVideoPreview);
-    $('#f-image').addEventListener('input', e => updateImagePreview(e.target.value.trim()));
+    $('#f-image').addEventListener('input', e => setCropImage(e.target.value.trim()));
 
     $('#f-imgfile').addEventListener('change', e => {
       const file = e.target.files[0];
@@ -375,18 +415,73 @@
       reader.onload = () => {
         const img = new Image();
         img.onload = () => {
-          const scale = Math.min(1, 640 / img.width);
+          const scale = Math.min(1, 1280 / img.width);
           const canvas = document.createElement('canvas');
           canvas.width = Math.round(img.width * scale);
           canvas.height = Math.round(img.height * scale);
           canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          const data = canvas.toDataURL('image/jpeg', 0.82);
+          const data = canvas.toDataURL('image/jpeg', 0.9);
           $('#f-image').value = data;
-          updateImagePreview(data);
+          setCropImage(data);
         };
         img.src = reader.result;
       };
       reader.readAsDataURL(file);
+    });
+
+    /* ---------- التحكم في الصورة (الجزء الظاهر) ---------- */
+    const cropStage = $('#cropStage');
+    const cropImg = $('#cropImg');
+    const cropDot = $('#cropDot');
+
+    function parsePos(p) {
+      const [x, y] = String(p || '50,50').split(',').map(Number);
+      return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+    }
+
+    function applyCrop() {
+      const { x, y } = parsePos($('#f-imgpos').value);
+      const z = Number($('#f-zoomval').value) || 100;
+      cropImg.style.objectPosition = `${x}% ${y}%`;
+      cropImg.style.transform = `scale(${z / 100})`;
+      cropImg.style.transformOrigin = `${x}% ${y}%`;
+      cropDot.style.left = x + '%';
+      cropDot.style.top = y + '%';
+      $('#zoomVal').textContent = z;
+      $('#f-zoom').value = z;
+    }
+
+    function setCropImage(src) {
+      if (src && (src.startsWith('data:') || isHttp(src))) {
+        cropImg.src = src;
+        cropImg.hidden = false;
+        cropDot.hidden = false;
+        applyCrop();
+      } else {
+        cropImg.hidden = true;
+        cropDot.hidden = true;
+        cropImg.removeAttribute('src');
+      }
+    }
+
+    cropStage.addEventListener('click', e => {
+      if (cropImg.hidden) return;
+      const r = cropStage.getBoundingClientRect();
+      const x = Math.round(((e.clientX - r.left) / r.width) * 100);
+      const y = Math.round(((e.clientY - r.top) / r.height) * 100);
+      $('#f-imgpos').value = `${Math.min(100, Math.max(0, x))},${Math.min(100, Math.max(0, y))}`;
+      applyCrop();
+    });
+
+    $('#f-zoom').addEventListener('input', e => {
+      $('#f-zoomval').value = e.target.value;
+      applyCrop();
+    });
+
+    $('#cropReset').addEventListener('click', () => {
+      $('#f-imgpos').value = '50,50';
+      $('#f-zoomval').value = '100';
+      applyCrop();
     });
 
     /* ---------- النموذج ---------- */
@@ -396,7 +491,9 @@
       $('#f-featured').checked = false;
       $('#f-order').value = 0;
       $('#f-imgfile').value = '';
-      updateImagePreview('');
+      $('#f-imgpos').value = '50,50';
+      $('#f-zoomval').value = '100';
+      setCropImage('');
       updateVideoPreview();
       $('#formTitle').textContent = '➕ إضافة لعبة جديدة';
       hideAlert();
@@ -415,7 +512,9 @@
       $('#f-links').value = linksToText(g.links);
       $('#f-featured').checked = !!g.featured;
       $('#f-order').value = g.featuredOrder || 0;
-      updateImagePreview(g.image);
+      $('#f-imgpos').value = g.imgPos || '50,50';
+      $('#f-zoomval').value = g.imgZoom || 100;
+      setCropImage(g.image);
       updateVideoPreview();
       $('#formTitle').textContent = '✏️ تعديل: ' + g.title;
       hideAlert();
@@ -445,6 +544,8 @@
         version: $('#f-version').value.trim(),
         developer: $('#f-developer').value.trim(),
         image: $('#f-image').value.trim(),
+        imgPos: $('#f-imgpos').value,
+        imgZoom: Number($('#f-zoomval').value) || 100,
         video: $('#f-video').value.trim(),
         description: $('#f-description').value.trim(),
         featured: $('#f-featured').checked,
@@ -549,11 +650,99 @@
       e.target.value = '';
     });
 
+    /* ---------- التعليقات ---------- */
+    let allComments = [];
+    const SB_URL = (DB && DB.baseUrl) || 'https://mnrjvnxwnzkowcshkfxi.supabase.co';
+    const SB_KEY = 'sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff';
+
+    function adminHeaders(extra) {
+      const token = sessionStorage.getItem('gamex_token');
+      return Object.assign({
+        apikey: SB_KEY,
+        Authorization: 'Bearer ' + (token || SB_KEY),
+        'Content-Type': 'application/json'
+      }, extra || {});
+    }
+
+    async function loadAllComments() {
+      const res = await fetch(`${SB_URL}/rest/v1/comments?select=id,game_id,name,body,approved,created_at&order=created_at.desc`, { headers: adminHeaders() });
+      if (!res.ok) throw new Error('تعذّر تحميل التعليقات (' + res.status + ')');
+      allComments = await res.json();
+      renderComments();
+    }
+
+    function gameTitle(id) {
+      const g = games.find(x => String(x.id) === String(id));
+      return g ? g.title : 'لعبة محذوفة (' + id + ')';
+    }
+
+    function renderComments() {
+      const f = $('#cFilter').value;
+      const list = allComments.filter(c =>
+        f === 'all' || (f === 'visible' ? c.approved : !c.approved));
+      $('#cCount2').textContent = allComments.length;
+      $('#commentsAdmin').innerHTML = list.map(c => `
+        <div class="c-row">
+          <div class="c-body">
+            <div class="c-meta">
+              <strong>${esc(c.name)}</strong> على
+              <span style="color:var(--accent)">${esc(gameTitle(c.game_id))}</span>
+              · ${new Date(c.created_at).toLocaleString('ar-EG')}
+              ${c.approved ? '' : '<span class="tag hidden-c">مخفي</span>'}
+            </div>
+            <p>${esc(c.body)}</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-muted btn-sm" data-cmt-toggle="${esc(c.id)}">${c.approved ? 'إخفاء' : 'إظهار'}</button>
+            <button class="btn btn-danger btn-sm" data-cmt-del="${esc(c.id)}">حذف</button>
+          </div>
+        </div>`).join('') || '<p class="hint">مفيش تعليقات في الفلتر ده.</p>';
+    }
+
+    async function setCommentApproved(id, approved) {
+      const res = await fetch(`${SB_URL}/rest/v1/comments?id=eq.${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        headers: adminHeaders({ Prefer: 'return=minimal' }),
+        body: JSON.stringify({ approved })
+      });
+      if (!res.ok) throw new Error('فشل التعديل (' + res.status + ')');
+    }
+
+    async function deleteComment(id) {
+      const res = await fetch(`${SB_URL}/rest/v1/comments?id=eq.${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: adminHeaders({ Prefer: 'return=minimal' })
+      });
+      if (!res.ok) throw new Error('فشل الحذف (' + res.status + ')');
+    }
+
+    $('#cFilter').addEventListener('change', renderComments);
+    $('#cRefresh').addEventListener('click', () => loadAllComments().catch(e => alert(e.message)));
+
+    $('#commentsAdmin').addEventListener('click', async e => {
+      const tg = e.target.closest('[data-cmt-toggle]');
+      const dl = e.target.closest('[data-cmt-del]');
+      try {
+        if (tg) {
+          const c = allComments.find(x => String(x.id) === tg.dataset.cmtToggle);
+          await setCommentApproved(c.id, !c.approved);
+          c.approved = !c.approved;
+          renderComments();
+        }
+        if (dl && confirm('تحذف التعليق ده نهائياً؟')) {
+          await deleteComment(dl.dataset.cmtDel);
+          allComments = allComments.filter(x => String(x.id) !== dl.dataset.cmtDel);
+          renderComments();
+        }
+      } catch (err) { alert(err.message); }
+    });
+
     /* ---------- الدخول والخروج ---------- */
     async function showApp() {
       $('#login').hidden = true;
       $('#app').hidden = false;
       await refresh();
+      loadAllComments().catch(e => console.error(e));
     }
 
     $('#loginBtn').addEventListener('click', async () => {
@@ -578,7 +767,6 @@
     });
 
     if (DB.isLoggedIn()) showApp();
-
   </script>
 </body>
 </html>
