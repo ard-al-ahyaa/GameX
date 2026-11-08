@@ -659,9 +659,17 @@ function route() {
 
   if (h.startsWith("game/")) {
     const g = findGame(h.slice(5));
-    if (g) { showGame(g); return; }
-    toast("اللعبة دي مش موجودة");
-    location.hash = "";
+    if (g) {
+      try {
+        showGame(g);
+      } catch (err) {
+        console.error("showGame error:", err);
+        toast("حصلت مشكلة في فتح اللعبة");
+      }
+      return;
+    }
+    if (GAMES.length) toast("اللعبة دي مش موجودة");
+    showHome();
     return;
   }
 
@@ -673,7 +681,15 @@ function route() {
     if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 50);
   }
 }
-window.addEventListener("hashchange", route);
+
+// نستخدم popstate بدل hashchange عشان الزرار "رجوع" في المتصفح يشتغل
+window.addEventListener("popstate", route);
+
+// فتح صفحة اللعبة مباشرة
+function openGame(id) {
+  history.pushState(null, "", gameHref(id));
+  route();
+}
 
 /* ============ النشرة البريدية ============ */
 $("#newsletter").onsubmit = e => {
