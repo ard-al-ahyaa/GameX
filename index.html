@@ -1,268 +1,682 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GameX</title>
-<style>
-:root{
-  --bg:#0d0f14; --card:#171b24; --text:#f1f3f7; --muted:#9aa3b2;
-  --green:#22c55e; --green-d:#16a34a; --radius:14px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);
-  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
-}
-img{-webkit-user-drag:none;display:block}
-a{color:inherit;text-decoration:none}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة</title>
+  <meta name="description" content="GameX موقعك الأول لتحميل ألعاب الكمبيوتر بروابط مباشرة، فيديوهات تشويقية، وتصنيفات واضحة وتحديثات مستمرة.">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.yourdomain.com/">
+  <meta property="og:title" content="GameX | تحميل ألعاب الكمبيوتر">
+  <meta property="og:description" content="روابط مباشرة لأحدث ألعاب الكمبيوتر مع فيديوهات تشويقية.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.yourdomain.com/">
+  <style>
+    [hidden]{display:none!important}
+    :root{
+      --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#262e3d;
+      --text:#f0f3f8; --muted:#9aa4b5; --green:#22c55e; --green-d:#16a34a; --accent:#f97316;
+      --radius:14px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scroll-padding-top:80px}
+    body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+    body.lock{overflow:hidden}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%;-webkit-user-drag:none}
+    button,input,select{font:inherit}
+    .container{max-width:1200px;margin:auto;padding:0 5%}
 
-/* ===== Header ===== */
-header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 5%;background:var(--card);position:sticky;top:0;z-index:10;
-}
-.logo{font-size:1.6rem;font-weight:800;color:var(--green);cursor:pointer}
+    /* شاشة الافتتاح */
+    #splash{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
+    #splash.hide{opacity:0;pointer-events:none}
+    .splash-logo{font-size:3rem;font-weight:800;animation:pop .8s ease both}
+    .splash-logo span,.logo span{color:var(--green)}
+    .splash-bar{width:160px;height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:18px}
+    .splash-bar::after{content:"";display:block;height:100%;width:0;background:var(--green);animation:fill 1.6s ease forwards}
+    @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+    @keyframes fill{to{width:100%}}
 
-.container{max-width:1200px;margin:auto;padding:20px 5%}
+    /* شريط التقدم أعلى الصفحة */
+    #progress-bar{position:fixed;top:0;right:0;height:3px;width:0;background:var(--green);z-index:60}
 
-/* ===== Slider (الصفحة الرئيسية) ===== */
-.slider{
-  position:relative;height:min(70vh,520px);border-radius:var(--radius);
-  overflow:hidden;cursor:pointer;background:#000;
-}
-.slide{position:absolute;inset:0;opacity:0;transition:opacity .6s}
-.slide.active{opacity:1}
-.slide img{width:100%;height:100%;object-fit:cover}
-.slide-info{
-  position:absolute;right:0;left:0;bottom:0;padding:40px 30px 30px;
-  background:linear-gradient(transparent,rgba(0,0,0,.9));
-}
-.slide-info h2{font-size:clamp(1.4rem,4vw,2.4rem);margin-bottom:8px}
-.slide-info p{color:#d6dbe5;max-width:640px;line-height:1.7}
+    /* التوست */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
 
-.progress{position:absolute;top:0;right:0;left:0;height:5px;background:rgba(255,255,255,.2);z-index:2}
-.progress span{display:block;height:100%;width:0;background:var(--green)}
-.progress span.run{animation:fill 5s linear forwards}
-@keyframes fill{to{width:100%}}
+    /* الهيدر */
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(22,27,34,.95);backdrop-filter:blur(8px);display:flex;align-items:center;gap:16px;padding:12px 5%;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .logo{font-size:1.6rem;font-weight:800}
+    .topbar nav{display:flex;gap:18px;margin-right:auto}
+    .topbar nav a{color:var(--muted);font-size:.95rem}
+    .topbar nav a:hover{color:var(--green)}
+    .menu-toggle{display:none;background:none;border:0;color:var(--text);font-size:1.5rem;cursor:pointer}
+    #search{background:var(--bg);border:1px solid var(--line);color:var(--text);padding:9px 14px;border-radius:10px;width:240px}
+    #search:focus{outline:none;border-color:var(--green)}
 
-.section-title{margin:40px 0 18px;font-size:1.4rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
-.card{background:var(--card);border-radius:var(--radius);overflow:hidden;transition:transform .2s}
-.card:hover{transform:translateY(-4px)}
-.card img{width:100%;aspect-ratio:16/9;object-fit:cover}
-.card h3{padding:12px 14px;font-size:1.05rem}
+    /* البانر */
+    .banner{position:relative;margin:20px auto 0;max-width:1200px;height:min(65vh,500px);border-radius:var(--radius);overflow:hidden;background:#000;cursor:pointer}
+    .banner .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+    .banner .slide.active{opacity:1}
+    .banner .slide img{width:100%;height:100%;object-fit:cover}
+    .slide-info{position:absolute;inset:auto 0 0 0;padding:60px 30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.92))}
+    .slide-info h2{font-size:clamp(1.4rem,4vw,2.4rem);margin-bottom:8px}
+    .slide-info p{color:#d6dbe5;max-width:640px}
+    .banner-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:1.6rem;cursor:pointer;z-index:3}
+    #prevSlide{right:12px}
+    #nextSlide{left:12px}
+    .dots{position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:3}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.4);border:0;cursor:pointer}
+    .dot.active{background:var(--green)}
+    .banner-bar{position:absolute;top:0;right:0;left:0;height:4px;background:rgba(255,255,255,.2);z-index:3}
+    .banner-bar span{display:block;height:100%;width:0;background:var(--green)}
+    .banner-bar span.run{animation:fill 5s linear forwards}
 
-/* ===== صفحة اللعبة ===== */
-.back{display:inline-block;margin-bottom:20px;color:var(--muted)}
-.back:hover{color:var(--green)}
-.game-top{
-  display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;
-}
-/* في RTL: أول عنصر = اليمين (الفيديو)، ثاني عنصر = الشمال (الزر) */
-.video-box video{width:100%;border-radius:var(--radius);background:#000;aspect-ratio:16/9}
-.info-box h1{font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:14px}
-.comment{color:#cfd5e0;line-height:1.9;margin-bottom:24px}
-.dl-btn{
-  display:inline-block;padding:16px 36px;border-radius:12px;
-  background:var(--green);color:#052e16;font-weight:800;font-size:1.1rem;
-  transition:background .2s, transform .2s;
-}
-.dl-btn:hover{background:var(--green-d);transform:scale(1.03)}
+    /* الهيرو */
+    .hero{text-align:center;padding:50px 5% 20px}
+    .hero h1{font-size:clamp(1.6rem,4vw,2.6rem);margin-bottom:10px}
+    .hero h1 span{color:var(--green)}
+    .hero>p{color:var(--muted)}
+    .stats{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:28px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 26px;min-width:150px}
+    .stat strong{display:block;font-size:1.8rem;color:var(--green)}
+    .stat span{color:var(--muted);font-size:.9rem}
 
-.specs{margin-top:40px;background:var(--card);border-radius:var(--radius);padding:26px}
-.specs h2{margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #262c3a;color:var(--green)}
-.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.spec{background:var(--bg);padding:14px 16px;border-radius:10px;display:flex;justify-content:space-between;gap:10px}
-.spec span{color:var(--muted)}
-.spec strong{font-weight:600}
+    /* عناوين الأقسام */
+    .section-title{font-size:1.6rem;margin:50px 0 6px;text-align:center}
+    .section-sub{text-align:center;color:var(--muted);margin-bottom:24px}
+    main{max-width:1200px;margin:auto;padding:0 5%}
 
-/* ===== Responsive ===== */
-@media (max-width:768px){
-  .game-top{grid-template-columns:1fr}
-  .dl-btn{width:100%;text-align:center}
-  .slide-info{padding:25px 18px}
-}
-</style>
+    /* الفلاتر */
+    .toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:var(--card);border:1px solid var(--line);color:var(--muted);padding:7px 16px;border-radius:999px;cursor:pointer}
+    .chip.active,.chip:hover{border-color:var(--green);color:var(--green)}
+    .sort-select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+    .count-info{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+    .empty{text-align:center;color:var(--muted);padding:40px 0}
+
+    /* شبكة الألعاب */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+    .game-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer}
+    .game-card:hover{transform:translateY(-4px);border-color:var(--green)}
+    .game-card img{width:100%;aspect-ratio:16/9;object-fit:cover}
+    .game-card .body{padding:12px 14px 16px}
+    .game-card h3{font-size:1.05rem;margin-bottom:10px}
+    .card-actions{display:flex;gap:8px}
+    .card-actions button{flex:1}
+
+    /* الأزرار */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:.2s}
+    .btn-green{background:var(--green);color:#052e16}
+    .btn-green:hover{background:var(--green-d)}
+    .btn-video{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+    .btn-video:hover{border-color:var(--green)}
+    .btn-accent{background:var(--accent);color:#fff}
+    .btn-lg{padding:14px 30px;font-size:1.05rem}
+    .btn-sm{padding:8px 12px;font-size:.9rem}
+
+    /* طريقة التحميل والمميزات */
+    .steps{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+    .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center}
+    .step-num{display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:#052e16;font-weight:800;margin-bottom:10px}
+    .step h3{font-size:1rem;margin-bottom:6px}
+    .step p{color:var(--muted);font-size:.92rem}
+    .features{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .feature{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;text-align:center}
+    .feature .icon{font-size:2rem;margin-bottom:8px}
+    .feature h3{margin-bottom:6px}
+    .feature p{color:var(--muted);font-size:.92rem}
+
+    /* صندوق الدعوة */
+    .cta-box{max-width:800px;margin:50px auto 0;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px 24px}
+    .cta-box p{color:var(--muted);margin:6px 0 18px}
+    .newsletter{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+    .newsletter input{flex:1;min-width:220px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+    .newsletter-msg{margin-top:12px;min-height:22px;font-size:.92rem}
+    .newsletter-msg.ok{color:var(--green)}
+    .newsletter-msg.err{color:#f87171}
+
+    /* الأسئلة الشائعة */
+    .faq{max-width:800px;margin:0 auto;padding:0 5%}
+    details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+    summary{cursor:pointer;font-weight:700}
+    details p{color:var(--muted);margin-top:8px}
+
+    .notice{max-width:800px;margin:40px auto;padding:16px 20px;background:rgba(249,115,22,.1);border:1px solid var(--accent);border-radius:10px;color:#fed7aa;font-size:.92rem}
+
+    /* الفوتر */
+    footer{background:var(--card);border-top:1px solid var(--line);margin-top:60px;padding:40px 5% 20px}
+    .footer-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+    footer h4{color:var(--green);margin-bottom:10px}
+    footer ul{list-style:none}
+    footer li{margin-bottom:6px}
+    footer a{color:var(--muted)}
+    footer a:hover{color:var(--green)}
+    footer p{color:var(--muted);font-size:.92rem}
+    .footer-bottom{text-align:center;color:var(--muted);font-size:.85rem;margin-top:30px;padding-top:16px;border-top:1px solid var(--line)}
+
+    .to-top{position:fixed;bottom:22px;left:22px;width:46px;height:46px;border-radius:50%;border:0;background:var(--green);color:#052e16;font-size:1.3rem;font-weight:800;cursor:pointer;opacity:0;pointer-events:none;transition:.3s;z-index:40}
+    .to-top.show{opacity:1;pointer-events:auto}
+
+    /* النوافذ */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100}
+    .modal-box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);width:100%;max-width:760px;max-height:92vh;overflow-y:auto}
+    .close{position:absolute;top:10px;left:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:1.5rem;cursor:pointer;z-index:2}
+    .modal-box>img{width:100%;aspect-ratio:16/9;object-fit:cover}
+    .modal-body{padding:22px}
+    .modal-body h2{font-size:1.6rem;margin:8px 0 10px}
+    .badge{display:inline-block;background:var(--card2);color:var(--green);padding:3px 12px;border-radius:999px;font-size:.85rem}
+    .modal-body h4{margin:18px 0 10px;color:var(--green)}
+    .modal-body p{color:#cfd5e0;margin-bottom:14px}
+    .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+    .spec{background:var(--bg);padding:9px 12px;border-radius:8px;font-size:.92rem}
+    .spec span{color:var(--muted)}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+    .links{display:flex;flex-direction:column;gap:8px}
+    .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
+    .links a:hover{border-color:var(--green)}
+
+    .video-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);width:100%;max-width:900px;position:relative;padding:14px}
+    .video-frame video{width:100%;max-height:70vh;border-radius:10px;background:#000}
+    .video-title{margin:12px 0;font-size:1.2rem}
+    .video-actions{display:flex;justify-content:center}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:.6s}
+    .reveal.in{opacity:1;transform:none}
+
+    @media(max-width:768px){
+      .menu-toggle{display:block;margin-right:auto}
+      .topbar nav{display:none;width:100%;flex-direction:column;gap:12px;margin:0}
+      .topbar nav.open{display:flex}
+      #search{width:100%}
+      .slide-info{padding:40px 18px 24px}
+      .specs{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <a href="#" class="logo">GameX</a>
-</header>
+  <!-- شاشة الافتتاح -->
+  <div id="splash" aria-hidden="true">
+    <div class="splash-logo">Game<span>X</span></div>
+    <div class="splash-bar"></div>
+  </div>
 
-<main id="app" class="container"></main>
+  <div id="progress-bar"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- الهيدر -->
+  <header class="topbar">
+    <a href="index.html" class="logo" aria-label="GameX الرئيسية">Game<span>X</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
+    <nav id="mainNav" aria-label="القائمة الرئيسية">
+      <a href="#top">الرئيسية</a>
+      <a href="#games">الألعاب</a>
+      <a href="#how">طريقة التحميل</a>
+      <a href="#features">لماذا GameX</a>
+      <a href="#faq">الأسئلة الشائعة</a>
+    </nav>
+    <input id="search" type="search" placeholder="ابحث عن لعبة..." autocomplete="off" aria-label="بحث">
+  </header>
+
+  <!-- البانر -->
+  <section class="banner" id="banner" aria-label="الألعاب المميزة" hidden>
+    <div id="slides"></div>
+    <button class="banner-nav" id="prevSlide" aria-label="السابقة">‹</button>
+    <button class="banner-nav" id="nextSlide" aria-label="التالية">›</button>
+    <div class="dots" id="dots"></div>
+    <div class="banner-bar"><span id="bannerBar"></span></div>
+  </section>
+
+  <!-- الهيرو -->
+  <section class="hero" id="top">
+    <h1>حمّل أحدث ألعاب الكمبيوتر <span>بسرعة</span></h1>
+    <p>روابط مباشرة، فيديوهات تشويقية قبل التحميل، وتحديثات مستمرة.</p>
+    <div class="stats">
+      <div class="stat"><strong id="statGames">0</strong><span>لعبة متاحة</span></div>
+      <div class="stat"><strong id="statCats">0</strong><span>تصنيف</span></div>
+      <div class="stat"><strong id="statLinks">0</strong><span>رابط تحميل</span></div>
+      <div class="stat"><strong id="statVideos">0</strong><span>فيديو تشويقي</span></div>
+    </div>
+  </section>
+
+  <!-- الألعاب -->
+  <main>
+    <h2 class="section-title" id="games">مكتبة الألعاب</h2>
+    <p class="section-sub">اختر التصنيف، شاهد الفيديو، واضغط تنزيل</p>
+
+    <div class="toolbar">
+      <div class="filters" id="categories" role="group" aria-label="التصنيفات"></div>
+      <select class="sort-select" id="sortSelect" aria-label="ترتيب الألعاب">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="name">حسب الاسم</option>
+        <option value="cat">حسب التصنيف</option>
+      </select>
+    </div>
+
+    <p class="count-info" id="countInfo"></p>
+    <section id="gamesGrid" class="grid" aria-live="polite"></section>
+    <p id="empty" class="empty" hidden>لا توجد نتائج مطابقة، جرّب كلمة بحث أخرى.</p>
+  </main>
+
+  <!-- طريقة التحميل -->
+  <h2 class="section-title" id="how">إزاي تحمّل اللعبة؟</h2>
+  <p class="section-sub">خطوات بسيطة من أول ضغطة لحد ما تلعب</p>
+  <section class="steps">
+    <div class="step reveal"><span class="step-num">1</span><h3>اختار اللعبة</h3><p>ابحث باسمها أو اختار التصنيف اللي يعجبك.</p></div>
+    <div class="step reveal"><span class="step-num">2</span><h3>شاهد الفيديو</h3><p>اضغط "▶ شاهد الفيديو" وتفرج على التريلر قبل ما تقرر.</p></div>
+    <div class="step reveal"><span class="step-num">3</span><h3>اضغط تنزيل</h3><p>الزر الأخضر بيفتح رابط التحميل مباشرة.</p></div>
+    <div class="step reveal"><span class="step-num">4</span><h3>فك الضغط</h3><p>استخدم WinRAR أو 7-Zip لفك الملف داخل مجلد منفصل.</p></div>
+    <div class="step reveal"><span class="step-num">5</span><h3>ثبّت اللعبة</h3><p>شغّل ملف الإعداد أو الملف التنفيذي واتبع التعليمات.</p></div>
+    <div class="step reveal"><span class="step-num">6</span><h3>استمتع!</h3><p>اعمل اختصار على سطح المكتب وابدأ اللعب.</p></div>
+  </section>
+
+  <!-- المميزات -->
+  <h2 class="section-title" id="features">لماذا GameX؟</h2>
+  <p class="section-sub">كل اللي تحتاجه في مكان واحد</p>
+  <section class="features">
+    <article class="feature reveal"><div class="icon">⚡</div><h3>تحميل سريع</h3><p>روابط مباشرة بدون انتظار طويل أو إعلانات مزعجة.</p></article>
+    <article class="feature reveal"><div class="icon">🎬</div><h3>فيديوهات تشويقية</h3><p>شاهد تريلر كل لعبة قبل ما تحمّلها عشان تختار صح.</p></article>
+    <article class="feature reveal"><div class="icon">🔄</div><h3>تحديثات مستمرة</h3><p>نضيف أحدث الإصدارات فور توفرها لتبقى دائماً في المقدمة.</p></article>
+    <article class="feature reveal"><div class="icon">📱</div><h3>يعمل على كل الأجهزة</h3><p>تصميم متجاوب يعمل بسلاسة على الكمبيوتر والموبايل.</p></article>
+  </section>
+
+  <!-- دعوة للتواصل -->
+  <section class="cta-box reveal">
+    <h2>مش لاقي اللعبة اللي بتدور عليها؟</h2>
+    <p>ابعتلنا اسمها وهنضيفها في أقرب وقت.</p>
+    <a href="mailto:contact@yourdomain.com" class="btn btn-accent btn-lg">راسلنا الآن</a>
+  </section>
+
+  <!-- الأسئلة الشائعة -->
+  <h2 class="section-title" id="faq">الأسئلة الشائعة</h2>
+  <p class="section-sub">إجابات سريعة على أكثر الأسئلة شيوعاً</p>
+  <section class="faq">
+    <details open>
+      <summary>هل التحميل من GameX مجاني؟</summary>
+      <p>نعم، كل الألعاب المتاحة على الموقع يمكن تحميلها مجاناً بدون اشتراك.</p>
+    </details>
+    <details>
+      <summary>ليه بعض الروابط مش شغالة؟</summary>
+      <p>الروابط بتتحدث باستمرار. لو لقيت رابط مش شغال جرّب الرابط البديل في نفس نافذة اللعبة، أو تواصل معانا.</p>
+    </details>
+    <details>
+      <summary>إزاي أشغّل اللعبة بعد التحميل؟</summary>
+      <p>فك ضغط الملف باستخدام WinRAR أو 7-Zip، ثم شغّل ملف التثبيت أو الملف التنفيذي حسب التعليمات داخل المجلد.</p>
+    </details>
+    <details>
+      <summary>هل ممكن أطلب لعبة معينة؟</summary>
+      <p>أكيد، استخدم زر "راسلنا الآن" واكتب اسم اللعبة، وهنحاول نضيفها في أقرب وقت.</p>
+    </details>
+  </section>
+
+  <div class="notice">
+    <strong>تنبيه:</strong> الألعاب والروابط المعروضة للاستخدام الشخصي والتجريب فقط. يُرجى دعم مطوري الألعاب بشراء النسخ الأصلية عند الإمكان.
+  </div>
+
+  <!-- النشرة البريدية -->
+  <section class="cta-box reveal" style="margin-top:50px">
+    <h2>اشترك وكن أول من يعرف</h2>
+    <p>تابع الألعاب الجديدة فور إضافتها.</p>
+    <form class="newsletter" id="newsletter" novalidate>
+      <input type="email" id="nlEmail" placeholder="بريدك الإلكتروني" aria-label="البريد الإلكتروني" required>
+      <button class="btn btn-accent" type="submit">اشترك</button>
+    </form>
+    <div class="newsletter-msg" id="nlMsg"></div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>GameX</h4>
+        <p>موقع متخصص في تحميل ألعاب الكمبيوتر بروابط مباشرة وفيديوهات تشويقية وتصنيفات منظمة.</p>
+      </div>
+      <div>
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="#top">الرئيسية</a></li>
+          <li><a href="#games">الألعاب</a></li>
+          <li><a href="#faq">الأسئلة الشائعة</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>تواصل معنا</h4>
+        <ul>
+          <li><a href="mailto:contact@yourdomain.com">contact@yourdomain.com</a></li>
+          <li><a href="privacy.html">سياسة الخصوصية</a></li>
+          <li><a href="terms.html">شروط الاستخدام</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> GameX. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="للأعلى">↑</button>
+
+  <!-- نافذة تفاصيل اللعبة -->
+  <div id="detailsModal" class="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <button class="close" data-close="detailsModal" aria-label="إغلاق">&times;</button>
+      <img id="mImg" src="" alt="">
+      <div class="modal-body">
+        <span class="badge" id="mCat"></span>
+        <h2 id="mTitle"></h2>
+        <p id="mDesc"></p>
+        <div class="specs" id="mSpecs"></div>
+        <div class="modal-actions">
+          <button class="btn btn-video" id="mVideo">▶ شاهد الفيديو</button>
+          <button class="btn btn-green" id="mDownload">⬇ تنزيل الآن</button>
+        </div>
+        <h4>روابط التحميل</h4>
+        <div id="mLinks" class="links"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الفيديو -->
+  <div id="videoModal" class="modal" hidden>
+    <div class="video-box" role="dialog" aria-modal="true" aria-labelledby="vTitle">
+      <button class="close" data-close="videoModal" aria-label="إغلاق">&times;</button>
+      <div class="video-frame" id="videoWrap"></div>
+      <h3 class="video-title" id="vTitle"></h3>
+      <div class="video-actions">
+        <button class="btn btn-green" id="vDownload">⬇ تنزيل اللعبة</button>
+      </div>
+    </div>
+  </div>
 
 <script>
 /* ============================================================
-   بيانات الألعاب - عدّل هنا فقط
-   img      : صورة الغلاف
-   video    : رابط الفيديو (mp4)
-   comment  : التعليق على اللعبة
-   download : رابط التحميل
-   specs    : المواصفات (اسم الخاصية: القيمة)
+   بيانات الألعاب: عدّل هنا فقط
+   featured : true = تظهر في البانر
+   video    : رابط mp4 مباشر (أو سيب فاضي)
+   links    : روابط التحميل
    ============================================================ */
-const games = [
+const GAMES = [
   {
-    id: 1,
-    title: "Cyber Rush",
+    id: 1, title: "Cyber Rush", cat: "أكشن", featured: true,
     img: "https://placehold.co/1280x720/1e293b/22c55e?text=Cyber+Rush",
     video: "videos/cyber-rush.mp4",
-    comment: "لعبة أكشن سريعة في عالم مستقبلي، فيها جرافيك خرافي وقصة مشوقة تخليك مش عايز تسيبها.",
-    download: "https://example.com/download/cyber-rush",
-    specs: {
-      "المطور": "Neon Studio",
-      "الحجم": "12 GB",
-      "نظام التشغيل": "Windows 10 / 11",
-      "المعالج": "Intel i5 أو ما يعادله",
-      "الرام": "8 GB",
-      "كرت الشاشة": "GTX 1060",
-      "التخزين": "SSD مفضل"
-    }
+    comment: "لعبة أكشن سريعة في عالم مستقبلي، فيها جرافيك خرافي وقصة مشوقة.",
+    desc: "لعبة أكشن سريعة في عالم مستقبلي، فيها جرافيك خرافي وقصة مشوقة تخليك مش عايز تسيبها.",
+    specs: { "المطور": "Neon Studio", "الحجم": "12 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i5", "الرام": "8 GB", "كرت الشاشة": "GTX 1060" },
+    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/cyber-rush" }]
   },
   {
-    id: 2,
-    title: "Dragon Quest X",
+    id: 2, title: "Dragon Quest X", cat: "RPG", featured: true,
     img: "https://placehold.co/1280x720/3b1d1d/f97316?text=Dragon+Quest+X",
     video: "videos/dragon-quest.mp4",
-    comment: "مغامرة RPG واسعة مليانة وحوش وكنوز، واختار طريقك وأسلوب لعبك بالكامل.",
-    download: "https://example.com/download/dragon-quest",
-    specs: {
-      "المطور": "Ember Games",
-      "الحجم": "25 GB",
-      "نظام التشغيل": "Windows 10 / 11",
-      "المعالج": "Intel i7",
-      "الرام": "16 GB",
-      "كرت الشاشة": "RTX 2060",
-      "التخزين": "SSD"
-    }
+    comment: "مغامرة RPG واسعة مليانة وحوش وكنوز، واختار طريقك بالكامل.",
+    desc: "مغامرة RPG واسعة مليانة وحوش وكنوز، واختار طريقك وأسلوب لعبك بالكامل.",
+    specs: { "المطور": "Ember Games", "الحجم": "25 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i7", "الرام": "16 GB", "كرت الشاشة": "RTX 2060" },
+    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/dragon-quest" }]
   },
   {
-    id: 3,
-    title: "Racing Legends",
+    id: 3, title: "Racing Legends", cat: "سباقات", featured: true,
     img: "https://placehold.co/1280x720/102a43/38bdf8?text=Racing+Legends",
     video: "videos/racing-legends.mp4",
-    comment: "سباقات سرعة بأشهر السيارات، وفيزياء حقيقية وتحديات أونلاين مع أصحابك.",
-    download: "https://example.com/download/racing-legends",
-    specs: {
-      "المطور": "Velocity Team",
-      "الحجم": "18 GB",
-      "نظام التشغيل": "Windows 10 / 11",
-      "المعالج": "Intel i5",
-      "الرام": "8 GB",
-      "كرت الشاشة": "GTX 1660",
-      "التخزين": "SSD"
-    }
+    comment: "سباقات سرعة بأشهر السيارات، وفيزياء حقيقية وتحديات أونلاين.",
+    desc: "سباقات سرعة بأشهر السيارات، وفيزياء حقيقية وتحديات أونلاين مع أصحابك.",
+    specs: { "المطور": "Velocity Team", "الحجم": "18 GB", "نظام التشغيل": "Windows 10/11", "المعالج": "Intel i5", "الرام": "8 GB", "كرت الشاشة": "GTX 1660" },
+    links: [{ name: "رابط مباشر 1", url: "https://example.com/download/racing-legends" }]
   }
 ];
 
-const app = document.getElementById('app');
-let idx = 0;
-let timer = null;
+/* ============ أدوات مساعدة ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const SLIDE_MS = 5000;
 
-/* ================= الصفحة الرئيسية ================= */
-function renderHome() {
-  app.innerHTML = `
-    <div class="slider" id="slider">
-      <div class="progress"><span id="bar"></span></div>
-      ${games.map((g, i) => `
-        <div class="slide" data-i="${i}">
-          <img src="${g.img}" alt="${g.title}">
-          <div class="slide-info">
-            <h2>${g.title}</h2>
-            <p>${g.comment}</p>
-          </div>
-        </div>`).join('')}
-    </div>
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+}
 
-    <h2 class="section-title">كل الألعاب</h2>
-    <div class="grid">
-      ${games.map(g => `
-        <a class="card" href="#game-${g.id}">
-          <img src="${g.img}" alt="${g.title}">
-          <h3>${g.title}</h3>
-        </a>`).join('')}
-    </div>
-  `;
+/* ============ شاشة الافتتاح ============ */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const s = $("#splash");
+    s.classList.add("hide");
+    setTimeout(() => s.remove(), 600);
+  }, 1800);
+});
 
-  document.getElementById('slider').onclick = () => {
-    location.hash = '#game-' + games[idx].id;
-  };
+/* ============ شريط التقدم + زر للأعلى ============ */
+window.addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 || 0;
+  $("#progress-bar").style.width = pct + "%";
+  $("#toTop").classList.toggle("show", h.scrollTop > 400);
+});
+$("#toTop").onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  showSlide(0);
+/* ============ السنة ============ */
+$("#year").textContent = new Date().getFullYear();
+
+/* ============ الإحصائيات ============ */
+function renderStats() {
+  const cats = new Set(GAMES.map(g => g.cat));
+  $("#statGames").textContent = GAMES.length;
+  $("#statCats").textContent = cats.size;
+  $("#statLinks").textContent = GAMES.reduce((n, g) => n + g.links.length, 0);
+  $("#statVideos").textContent = GAMES.filter(g => g.video).length;
+}
+
+/* ============ البانر (كل لعبة 5 ثواني) ============ */
+let slideIdx = 0, slideTimer = null;
+const featured = GAMES.filter(g => g.featured);
+
+function renderBanner() {
+  if (!featured.length) { $("#banner").hidden = true; return; }
+  $("#slides").innerHTML = featured.map((g, i) => `
+    <div class="slide${i === 0 ? " active" : ""}" data-id="${g.id}">
+      <img src="${esc(g.img)}" alt="${esc(g.title)}">
+      <div class="slide-info">
+        <h2>${esc(g.title)}</h2>
+        <p>${esc(g.comment)}</p>
+      </div>
+    </div>`).join("");
+  $("#dots").innerHTML = featured.map((_, i) =>
+    `<button class="dot${i === 0 ? " active" : ""}" data-i="${i}" aria-label="شريحة ${i + 1}"></button>`).join("");
 }
 
 function showSlide(i) {
-  idx = i;
-  document.querySelectorAll('.slide').forEach((s, n) => {
-    s.classList.toggle('active', n === i);
-  });
+  slideIdx = (i + featured.length) % featured.length;
+  document.querySelectorAll("#slides .slide").forEach((s, n) => s.classList.toggle("active", n === slideIdx));
+  document.querySelectorAll(".dot").forEach((d, n) => d.classList.toggle("active", n === slideIdx));
 
-  // إعادة تشغيل شريط التقدم
-  const bar = document.getElementById('bar');
-  bar.classList.remove('run');
+  const bar = $("#bannerBar");
+  bar.classList.remove("run");
   void bar.offsetWidth;
-  bar.classList.add('run');
+  bar.classList.add("run");
 
-  // كل لعبة 5 ثواني
-  clearTimeout(timer);
-  timer = setTimeout(() => showSlide((i + 1) % games.length), 5000);
+  clearTimeout(slideTimer);
+  slideTimer = setTimeout(() => showSlide(slideIdx + 1), SLIDE_MS);
 }
 
-/* ================= صفحة اللعبة ================= */
-function renderGame(id) {
-  clearTimeout(timer);
-  const g = games.find(x => x.id === id);
-  if (!g) { location.hash = ''; return; }
+$("#nextSlide").onclick = e => { e.stopPropagation(); showSlide(slideIdx + 1); };
+$("#prevSlide").onclick = e => { e.stopPropagation(); showSlide(slideIdx - 1); };
+$("#dots").onclick = e => {
+  const d = e.target.closest(".dot");
+  if (d) { e.stopPropagation(); showSlide(+d.dataset.i); }
+};
+$("#banner").onclick = e => {
+  const s = e.target.closest(".slide");
+  if (s) openDetails(+s.dataset.id);
+};
 
-  const specs = Object.entries(g.specs).map(([k, v]) => `
-    <div class="spec"><span>${k}</span><strong>${v}</strong></div>`).join('');
+/* ============ الفلاتر والترتيب والبحث ============ */
+let activeCat = "الكل";
+let query = "";
+let sortBy = "default";
 
-  app.innerHTML = `
-    <a class="back" href="#">→ رجوع</a>
+function renderCategories() {
+  const cats = ["الكل", ...new Set(GAMES.map(g => g.cat))];
+  $("#categories").innerHTML = cats.map(c =>
+    `<button class="chip${c === activeCat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
+}
 
-    <div class="game-top">
-      <div class="video-box">
-        <video src="${g.video}" poster="${g.img}" controls
-               controlsList="nodownload" oncontextmenu="return false"></video>
+function getFiltered() {
+  let list = GAMES.filter(g =>
+    (activeCat === "الكل" || g.cat === activeCat) &&
+    g.title.toLowerCase().includes(query.toLowerCase())
+  );
+  if (sortBy === "name") list = [...list].sort((a, b) => a.title.localeCompare(b.title));
+  if (sortBy === "cat") list = [...list].sort((a, b) => a.cat.localeCompare(b.cat));
+  return list;
+}
+
+function renderGrid() {
+  const list = getFiltered();
+  $("#gamesGrid").innerHTML = list.map(g => `
+    <article class="game-card reveal" data-id="${g.id}">
+      <img src="${esc(g.img)}" alt="${esc(g.title)}" loading="lazy">
+      <div class="body">
+        <span class="badge">${esc(g.cat)}</span>
+        <h3>${esc(g.title)}</h3>
+        <div class="card-actions">
+          <button class="btn btn-video btn-sm" data-video="${g.id}" ${g.video ? "" : "disabled"}>▶ الفيديو</button>
+          <button class="btn btn-green btn-sm" data-open="${g.id}">⬇ تنزيل</button>
+        </div>
       </div>
-
-      <div class="info-box">
-        <h1>${g.title}</h1>
-        <p class="comment">${g.comment}</p>
-        <a class="dl-btn" href="${g.download}" target="_blank" rel="noopener">⬇ تحميل اللعبة</a>
-      </div>
-    </div>
-
-    <section class="specs">
-      <h2>تنزيل</h2>
-      <div class="spec-grid">${specs}</div>
-    </section>
-  `;
-  window.scrollTo(0, 0);
+    </article>`).join("");
+  $("#empty").hidden = list.length > 0;
+  $("#countInfo").textContent = `عرض ${list.length} من ${GAMES.length} لعبة`;
+  observeReveal();
 }
 
-/* ================= التوجيه ================= */
-function route() {
-  const h = location.hash;
-  if (h.startsWith('#game-')) {
-    renderGame(parseInt(h.slice(6), 10));
-  } else {
-    renderHome();
-  }
-}
-window.addEventListener('hashchange', route);
-route();
+$("#categories").onclick = e => {
+  const c = e.target.closest(".chip");
+  if (!c) return;
+  activeCat = c.dataset.cat;
+  renderCategories();
+  renderGrid();
+};
+$("#sortSelect").onchange = e => { sortBy = e.target.value; renderGrid(); };
+$("#search").oninput = e => { query = e.target.value.trim(); renderGrid(); };
 
-/* ================= منع النسخ ================= */
-['copy', 'cut', 'contextmenu', 'dragstart'].forEach(ev =>
-  document.addEventListener(ev, e => e.preventDefault())
-);
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && ['c', 'x', 'u', 's', 'a', 'p'].includes(e.key.toLowerCase())) {
-    e.preventDefault();
-  }
+$("#gamesGrid").onclick = e => {
+  const v = e.target.closest("[data-video]");
+  const o = e.target.closest("[data-open]");
+  const card = e.target.closest(".game-card");
+  if (v) { e.stopPropagation(); openVideo(+v.dataset.video); }
+  else if (o) { e.stopPropagation(); openDetails(+o.dataset.open); }
+  else if (card) openDetails(+card.dataset.id);
+};
+
+/* ============ نافذة التفاصيل ============ */
+let currentId = null;
+
+function openDetails(id) {
+  const g = GAMES.find(x => x.id === id);
+  if (!g) return;
+  currentId = id;
+  $("#mImg").src = g.img;
+  $("#mImg").alt = g.title;
+  $("#mCat").textContent = g.cat;
+  $("#mTitle").textContent = g.title;
+  $("#mDesc").textContent = g.desc || g.comment;
+  $("#mSpecs").innerHTML = Object.entries(g.specs || {}).map(([k, v]) =>
+    `<div class="spec"><span>${esc(k)}: </span>${esc(v)}</div>`).join("");
+  $("#mVideo").hidden = !g.video;
+  $("#mDownload").hidden = !g.links.length;
+  $("#mLinks").innerHTML = g.links.length
+    ? g.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.name)} <span>⬇</span></a>`).join("")
+    : "<p>لا توجد روابط حالياً.</p>";
+  openModal("detailsModal");
+}
+
+$("#mVideo").onclick = () => openVideo(currentId);
+$("#mDownload").onclick = () => {
+  const g = GAMES.find(x => x.id === currentId);
+  if (g && g.links[0]) window.open(g.links[0].url, "_blank", "noopener");
+};
+
+/* ============ نافذة الفيديو ============ */
+function openVideo(id) {
+  const g = GAMES.find(x => x.id === id);
+  if (!g || !g.video) { toast("الفيديو غير متاح لهذه اللعبة"); return; }
+  $("#vTitle").textContent = g.title;
+  $("#videoWrap").innerHTML = `<video src="${esc(g.video)}" poster="${esc(g.img)}" controls controlsList="nodownload" playsinline></video>`;
+  $("#vDownload").hidden = !g.links.length;
+  $("#vDownload").onclick = () => window.open(g.links[0].url, "_blank", "noopener");
+  openModal("videoModal");
+}
+
+/* ============ فتح وإغلاق النوافذ ============ */
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.hidden = false;
+  document.body.classList.add("lock");
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.hidden = true;
+  if (id === "videoModal") $("#videoWrap").innerHTML = "";
+  if (!document.querySelector(".modal:not([hidden])")) document.body.classList.remove("lock");
+}
+
+document.querySelectorAll("[data-close]").forEach(b =>
+  b.addEventListener("click", () => closeModal(b.dataset.close)));
+document.querySelectorAll(".modal").forEach(m =>
+  m.addEventListener("click", e => { if (e.target === m) closeModal(m.id); }));
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") document.querySelectorAll(".modal:not([hidden])").forEach(m => closeModal(m.id));
 });
+
+/* ============ القائمة للموبايل ============ */
+$("#menuToggle").onclick = () => $("#mainNav").classList.toggle("open");
+$("#mainNav").onclick = e => { if (e.target.tagName === "A") $("#mainNav").classList.remove("open"); };
+
+/* ============ النشرة البريدية ============ */
+$("#newsletter").onsubmit = e => {
+  e.preventDefault();
+  const email = $("#nlEmail").value.trim();
+  const msg = $("#nlMsg");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.className = "newsletter-msg err";
+    msg.textContent = "اكتب بريد إلكتروني صحيح.";
+    return;
+  }
+  msg.className = "newsletter-msg ok";
+  msg.textContent = "تم الاشتراك، شكراً لك!";
+  e.target.reset();
+};
+
+/* ============ ظهور العناصر عند السكرول ============ */
+const revealIO = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); revealIO.unobserve(en.target); } });
+}, { threshold: 0.12 });
+function observeReveal() {
+  document.querySelectorAll(".reveal:not(.in)").forEach(el => revealIO.observe(el));
+}
+
+/* ============ منع النسخ (رادع فقط) ============ */
+const isField = t => t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA");
+["copy", "cut", "contextmenu", "dragstart", "selectstart"].forEach(ev =>
+  document.addEventListener(ev, e => { if (!isField(e.target)) e.preventDefault(); }));
+document.addEventListener("keydown", e => {
+  if (isField(e.target)) return;
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && ["c", "x", "u", "s", "p", "a"].includes(k)) e.preventDefault();
+});
+
+/* ============ التشغيل ============ */
+renderStats();
+renderBanner();
+renderCategories();
+renderGrid();
+showSlide(0);
+observeReveal();
 </script>
 </body>
 </html>
