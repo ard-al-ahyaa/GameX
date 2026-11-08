@@ -242,25 +242,38 @@
     </div>
   </section>
 
-  <!-- الألعاب -->
-  <main>
-    <h2 class="section-title" id="games">مكتبة الألعاب</h2>
-    <p class="section-sub">اختر التصنيف، شاهد الفيديو، واضغط تنزيل</p>
+  /* ============ التشغيل ============ */
+let GAMES = [];
 
-    <div class="toolbar">
-      <div class="filters" id="categories" role="group" aria-label="التصنيفات"></div>
-      <select class="sort-select" id="sortSelect" aria-label="ترتيب الألعاب">
-        <option value="default">الترتيب الافتراضي</option>
-        <option value="name">حسب الاسم</option>
-        <option value="cat">حسب التصنيف</option>
-      </select>
-    </div>
+async function init() {
+  try {
+    GAMES = await GameXDB.getGames();
+    // تأكد إن كل لعبة فيها الحقول الأساسية
+    GAMES = GAMES.map(g => ({
+      links: [],
+      specs: {},
+      cat: "عام",
+      img: "",
+      comment: "",
+      desc: "",
+      ...g,
+      id: g.id
+    }));
+  } catch (err) {
+    console.error(err);
+    toast("تعذّر تحميل الألعاب: " + err.message);
+    GAMES = [];
+  }
+  renderStats();
+  renderBanner();
+  renderCategories();
+  renderGrid();
+  showSlide(0);
+  observeReveal();
+}
 
-    <p class="count-info" id="countInfo"></p>
-    <section id="gamesGrid" class="grid" aria-live="polite"></section>
-    <p id="empty" class="empty" hidden>لا توجد نتائج مطابقة، جرّب كلمة بحث أخرى.</p>
-  </main>
-
+init();
+  
   <!-- طريقة التحميل -->
   <h2 class="section-title" id="how">إزاي تحمّل اللعبة؟</h2>
   <p class="section-sub">خطوات بسيطة من أول ضغطة لحد ما تلعب</p>
