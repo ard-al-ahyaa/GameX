@@ -3,14 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة</title>
-  <meta name="description" content="GameX موقعك لتحميل ألعاب الكمبيوتر بروابط مباشرة، فيديوهات تشويقية، وتصنيفات واضحة وتحديثات مستمرة.">
+  <title>محمد حامد للألعاب | GameX - مكتبة ألعاب الكمبيوتر</title>
+  <meta name="description" content="موقع محمد حامد للألعاب GameX: تصفح مكتبة ألعاب الكمبيوتر، واكتشف أحدث الإضافات والتصنيفات، مع تفاصيل كل لعبة ومتطلبات التشغيل وروابط المصادر الرسمية أو المصرح بها.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.yourdomain.com/">
-  <meta property="og:title" content="GameX | تحميل ألعاب الكمبيوتر">
-  <meta property="og:description" content="روابط مباشرة لأحدث ألعاب الكمبيوتر مع فيديوهات تشويقية.">
+  <link rel="canonical" href="https://gamex-tau-inky.vercel.app/">
+  <meta property="og:title" content="محمد حامد للألعاب | GameX">
+  <meta property="og:description" content="اكتشف ألعاب الكمبيوتر وتصنيفاتها وتفاصيلها ومتطلبات التشغيل على GameX.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.yourdomain.com/">
+  <meta property="og:url" content="https://gamex-tau-inky.vercel.app/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="محمد حامد للألعاب | GameX">
+  <meta name="twitter:description" content="مكتبة ألعاب الكمبيوتر والتصنيفات وتفاصيل الألعاب على GameX.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "محمد حامد للألعاب | GameX",
+    "url": "https://gamex-tau-inky.vercel.app/",
+    "inLanguage": "ar",
+    "description": "مكتبة ألعاب الكمبيوتر والتصنيفات وتفاصيل الألعاب ومتطلبات التشغيل."
+  }
+  </script>
   <script>
     (function () {
       try {
@@ -113,6 +126,20 @@
     .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .sort-select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
     .count-info{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+    .discovery-section{max-width:1200px;margin:42px auto 0;padding:0 5%}
+    .discovery-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .discovery-head h2{font-size:1.45rem}
+    .discovery-head p{color:var(--muted);font-size:.9rem}
+    .category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+    .category-tile{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:15px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);cursor:pointer;text-align:right;transition:.2s}
+    .category-tile:hover{border-color:var(--green);transform:translateY(-2px)}
+    .category-tile strong{font-size:.95rem}
+    .category-tile span{color:var(--muted);font-size:.82rem}
+    .discovery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+    .game-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:.82rem;margin:0 0 10px}
+    .game-meta span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .game-card .body .badge{margin-bottom:3px}
+    .discovery-empty{color:var(--muted);padding:18px 0}
     .empty{text-align:center;color:var(--muted);padding:40px 0}
 
     /* شبكة الألعاب */
@@ -241,6 +268,8 @@
       .topbar nav.open{display:flex}
       #search{width:100%}
       .slide-info{padding:40px 18px 24px}
+      .discovery-section{padding:0 5%}
+      .discovery-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
     }
   </style>
 </head>
@@ -261,7 +290,9 @@
     <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
     <nav id="mainNav" aria-label="القائمة الرئيسية">
       <a href="#top">الرئيسية</a>
-      <a href="#games">الألعاب</a>
+      <a href="#games">كل الألعاب</a>
+      <a href="#browseCategories">التصنيفات</a>
+      <a href="#popularGames">الأكثر مشاهدة</a>
       <a href="#how">طريقة التحميل</a>
       <a href="#features">لماذا GameX</a>
       <a href="#faq">الأسئلة الشائعة</a>
@@ -282,8 +313,8 @@
     </section>
 
     <section class="hero" id="top">
-      <h1>حمّل أحدث ألعاب الكمبيوتر <span>بسرعة</span></h1>
-      <p>روابط مباشرة، وتفاصيل كاملة وفيديو تشويقي لكل لعبة، وتحديثات مستمرة.</p>
+      <h1>اكتشف ألعاب الكمبيوتر مع <span>GameX</span></h1>
+      <p>مكتبة ألعاب منظمة، تصنيفات متنوعة، صور وفيديوهات، وتفاصيل تساعدك تختار اللعبة المناسبة لجهازك.</p>
       <div class="stats">
         <div class="stat"><strong id="statGames">0</strong><span>لعبة متاحة</span></div>
         <div class="stat"><strong id="statCats">0</strong><span>تصنيف</span></div>
@@ -293,7 +324,7 @@
 
     <main>
       <h2 class="section-title" id="games">مكتبة الألعاب</h2>
-      <p class="section-sub">اختر التصنيف، شاهد الفيديو، واضغط تنزيل</p>
+      <p class="section-sub">ابحث عن لعبتك، تصفح التصنيفات، وافتح صفحة اللعبة لمعرفة التفاصيل ومتطلبات التشغيل.</p>
 
       <div class="toolbar">
         <div class="filters" id="categories" role="group" aria-label="التصنيفات"></div>
@@ -313,15 +344,36 @@
       <p id="empty" class="empty" hidden>لا توجد نتائج مطابقة، جرّب كلمة بحث أخرى.</p>
     </main>
 
-    <h2 class="section-title" id="how">إزاي تحمّل اللعبة؟</h2>
+    <section class="discovery-section" id="browseCategories">
+      <div class="discovery-head">
+        <div><h2>تصفح حسب التصنيف</h2><p>اختار نوع الألعاب اللي بتحبه.</p></div>
+      </div>
+      <div class="category-grid" id="categoryTiles"></div>
+    </section>
+
+    <section class="discovery-section" id="latestGames">
+      <div class="discovery-head">
+        <div><h2>أحدث الإضافات</h2><p>ألعاب المكتبة مرتبة حسب تاريخ الإضافة عند توفره.</p></div>
+      </div>
+      <div class="discovery-grid" id="latestGrid"></div>
+    </section>
+
+    <section class="discovery-section" id="popularGames">
+      <div class="discovery-head">
+        <div><h2>الأكثر فتحًا على جهازك</h2><p>يعتمد الترتيب على سجل المشاهدة المحفوظ في متصفحك.</p></div>
+      </div>
+      <div class="discovery-grid" id="popularGrid"></div>
+    </section>
+
+    <h2 class="section-title" id="how">إزاي تلاقي تفاصيل اللعبة؟</h2>
     <p class="section-sub">خطوات بسيطة من أول ضغطة لحد ما تلعب</p>
     <section class="steps">
       <div class="step reveal"><span class="step-num">1</span><h3>اختار اللعبة</h3><p>ابحث باسمها أو اختار التصنيف اللي يعجبك.</p></div>
       <div class="step reveal"><span class="step-num">2</span><h3>شاهد الفيديو</h3><p>افتح صفحة اللعبة وتفرج على التريلر قبل ما تقرر.</p></div>
-      <div class="step reveal"><span class="step-num">3</span><h3>اضغط تنزيل</h3><p>الزر الأخضر بيفتح رابط التحميل مباشرة.</p></div>
-      <div class="step reveal"><span class="step-num">4</span><h3>فك الضغط</h3><p>استخدم WinRAR أو 7-Zip لفك الملف داخل مجلد منفصل.</p></div>
-      <div class="step reveal"><span class="step-num">5</span><h3>ثبّت اللعبة</h3><p>شغّل ملف الإعداد أو الملف التنفيذي واتبع التعليمات.</p></div>
-      <div class="step reveal"><span class="step-num">6</span><h3>استمتع!</h3><p>اعمل اختصار على سطح المكتب وابدأ اللعب.</p></div>
+      <div class="step reveal"><span class="step-num">3</span><h3>راجع المواصفات</h3><p>قارن متطلبات اللعبة بإمكانيات جهازك قبل اتخاذ القرار.</p></div>
+      <div class="step reveal"><span class="step-num">4</span><h3>راجع مصدر اللعبة</h3><p>استخدم صفحة الناشر أو المتجر الرسمي أو مصدرًا مصرحًا به.</p></div>
+      <div class="step reveal"><span class="step-num">5</span><h3>اقرأ التفاصيل</h3><p>راجع الحجم واللغة ونظام التشغيل والمعلومات المتاحة.</p></div>
+      <div class="step reveal"><span class="step-num">6</span><h3>اختار لعبتك</h3><p>احفظ الألعاب التي تهمك في قائمة المفضلة.</p></div>
     </section>
 
     <h2 class="section-title" id="features">لماذا GameX؟</h2>
@@ -336,7 +388,7 @@
     <section class="cta-box reveal">
       <h2>مش لاقي اللعبة اللي بتدور عليها؟</h2>
       <p>ابعتلنا اسمها وهنضيفها في أقرب وقت.</p>
-      <a href="mailto:contact@yourdomain.com" class="btn btn-accent btn-lg">راسلنا الآن</a>
+      <a href="mailto:ضع-بريدك-هنا@example.com" class="btn btn-accent btn-lg">راسلنا الآن</a>
     </section>
 
     <h2 class="section-title" id="faq">الأسئلة الشائعة</h2>
@@ -361,12 +413,12 @@
     </section>
 
     <div class="notice">
-      <strong>تنبيه:</strong> الألعاب والروابط المعروضة للاستخدام الشخصي والتجريب فقط. يُرجى دعم مطوري الألعاب بشراء النسخ الأصلية عند الإمكان.
+      <strong>تنبيه:</strong> يجب أن تكون روابط الألعاب من الناشر أو المتجر الرسمي أو مصدر يملك تصريحًا بالتوزيع. لا ترفع أو توزّع نسخًا غير مرخصة.
     </div>
 
     <section class="cta-box reveal" style="margin-top:50px">
       <h2>اشترك وكن أول من يعرف</h2>
-      <p>تابع الألعاب الجديدة فور إضافتها.</p>
+      <p>واجهة الاشتراك جاهزة، وتحتاج ربط خدمة بريدية لتخزين الاشتراكات فعليًا.</p>
       <form class="newsletter" id="newsletter" novalidate>
         <input type="email" id="nlEmail" placeholder="بريدك الإلكتروني" aria-label="البريد الإلكتروني" required>
         <button class="btn btn-accent" type="submit">اشترك</button>
@@ -412,6 +464,7 @@
         <div class="spec-grid" id="gSpecs"></div>
         <h3>روابط التحميل</h3>
         <div id="gLinks" class="links"></div>
+        <p class="report-row" style="margin-top:12px">تأكد دائمًا أن رابط اللعبة صادر عن الناشر أو متجر رسمي أو جهة تملك حق التوزيع.</p>
       </section>
 
       <section class="panel">
@@ -447,14 +500,16 @@
         <h4>روابط سريعة</h4>
         <ul>
           <li><a href="#top">الرئيسية</a></li>
-          <li><a href="#games">الألعاب</a></li>
+          <li><a href="#games">كل الألعاب</a>
+      <a href="#browseCategories">التصنيفات</a>
+      <a href="#popularGames">الأكثر مشاهدة</a></li>
           <li><a href="#faq">الأسئلة الشائعة</a></li>
         </ul>
       </div>
       <div>
         <h4>تواصل معنا</h4>
         <ul>
-          <li><a href="mailto:contact@yourdomain.com">contact@yourdomain.com</a></li>
+          <li><a href="mailto:ضع-بريدك-هنا@example.com">ضع-بريدك-هنا@example.com</a></li>
           <li><a href="privacy.html">سياسة الخصوصية</a></li>
           <li><a href="terms.html">شروط الاستخدام</a></li>
         </ul>
@@ -476,7 +531,7 @@ const BUCKET = "games";
 const VIDEO_BUCKET = "videos";
 const SLIDE_MS = 5000;
 const COMMENT_COOLDOWN_MS = 30000;
-const DEFAULT_TITLE = "GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة";
+const DEFAULT_TITLE = "محمد حامد للألعاب | GameX - مكتبة ألعاب الكمبيوتر";
 const FALLBACK_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'%3E%3Crect width='100%25' height='100%25' fill='%231c2330'/%3E%3Ctext x='50%25' y='50%25' fill='%239aa4b5' font-family='Tahoma' font-size='56' text-anchor='middle' dominant-baseline='middle'%3EGameX%3C/text%3E%3C/svg%3E";
 
 /* ============ أدوات ============ */
@@ -571,6 +626,7 @@ function toggleFav(id) {
 function bumpView(id) {
   views[id] = (views[id] || 0) + 1;
   store.set("gx_views", views);
+  if (state.loaded) renderDiscovery();
 }
 
 /* ============ تنظيف بيانات اللعبة ============ */
@@ -593,6 +649,8 @@ function normalize(g) {
     desc: g.desc || g.description || g.details || g.about || g.summary || "",
     comment: g.comment || g.short || "",
     featured: !!g.featured,
+    createdAt: g.created_at || g.createdAt || g.date || g.updated_at || "",
+    size: g.size || g.file_size || g.game_size || "",
     specs: toObj(g.specs),
     links
   };
@@ -669,6 +727,39 @@ function renderCategories() {
     `<button class="chip${c === state.cat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("");
 }
 
+function renderDiscovery() {
+  const counts = new Map();
+  state.games.forEach(g => counts.set(g.cat, (counts.get(g.cat) || 0) + 1));
+  const categories = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  $("#categoryTiles").innerHTML = categories.length
+    ? categories.map(([cat, count]) => `
+        <button class="category-tile" data-cat="${esc(cat)}">
+          <strong>${esc(cat)}</strong><span>${count} لعبة</span>
+        </button>`).join("")
+    : '<p class="discovery-empty">لا توجد تصنيفات بعد.</p>';
+
+  const dated = [...state.games].sort((a, b) => {
+    const da = Date.parse(a.createdAt) || 0;
+    const db = Date.parse(b.createdAt) || 0;
+    if (da && db) return db - da;
+    if (da) return -1;
+    if (db) return 1;
+    return state.games.indexOf(a) - state.games.indexOf(b);
+  });
+  const latest = dated.slice(0, 8);
+  $("#latestGrid").innerHTML = latest.length
+    ? latest.map(cardHTML).join("")
+    : '<p class="discovery-empty">لم تتم إضافة ألعاب بعد.</p>';
+
+  const popular = [...state.games].sort((a, b) =>
+    (views[b.id] || 0) - (views[a.id] || 0)
+  ).slice(0, 8);
+  $("#popularGrid").innerHTML = popular.length
+    ? popular.map(cardHTML).join("")
+    : '<p class="discovery-empty">لا توجد ألعاب لعرضها بعد.</p>';
+  observeReveal();
+}
+
 function visibleGames() {
   const q = state.q.toLowerCase();
   let list = state.games.filter(g =>
@@ -682,8 +773,17 @@ function visibleGames() {
   return list;
 }
 
+function getSize(g) {
+  if (g.size) return String(g.size);
+  const specs = g.specs || {};
+  const key = Object.keys(specs).find(k => /الحجم|حجم اللعبة|size|file.?size/i.test(k));
+  return key ? String(specs[key]) : "";
+}
+
 function cardHTML(g) {
   const isFav = favs.has(g.id);
+  const size = getSize(g);
+  const viewsCount = views[g.id] || 0;
   return `
     <article class="game-card reveal" data-open="${esc(g.id)}">
       <div class="thumb">
@@ -694,9 +794,13 @@ function cardHTML(g) {
       <div class="body">
         <span class="badge">${esc(g.cat)}</span>
         <h3>${esc(g.title)}</h3>
+        <div class="game-meta">
+          <span>${size ? "الحجم: " + esc(size) : "تفاصيل ومتطلبات التشغيل"}</span>
+          <span>${viewsCount ? viewsCount + " مشاهدة" : "GameX"}</span>
+        </div>
         <div class="card-actions">
           <button class="btn btn-video btn-sm" data-open="${esc(g.id)}">▶ التفاصيل</button>
-          <button class="btn btn-green btn-sm" data-open="${esc(g.id)}">⬇ تنزيل</button>
+          <button class="btn btn-green btn-sm" data-open="${esc(g.id)}">عرض اللعبة</button>
         </div>
       </div>
     </article>`;
@@ -792,6 +896,9 @@ function showGame(id) {
 
   state.current = g;
   document.title = g.title + " | GameX";
+  const pageDescription = g.desc || g.comment || ("تفاصيل لعبة " + g.title + " ومتطلبات تشغيلها على GameX.");
+  const descriptionMeta = document.querySelector('meta[name="description"]');
+  if (descriptionMeta) descriptionMeta.setAttribute("content", String(pageDescription).slice(0, 155));
   $("#gCat").textContent = g.cat;
   $("#gTitle").textContent = g.title;
   $("#gDesc").textContent = g.desc || g.comment || "لا يوجد وصف لهذه اللعبة.";
@@ -809,13 +916,27 @@ function showGame(id) {
     dl.classList.add("disabled");
   }
 
-  $("#gReport").href = `mailto:contact@yourdomain.com?subject=${encodeURIComponent("رابط معطل: " + g.title)}`;
+  $("#gReport").href = `mailto:ضع-بريدك-هنا@example.com?subject=${encodeURIComponent("رابط معطل: " + g.title)}`;
   updateFavBtn();
 
-  const specs = Object.entries(g.specs);
-  $("#gSpecs").innerHTML = specs.length
-    ? specs.map(([k, v]) => `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")
-    : "<p>لا توجد مواصفات مضافة.</p>";
+  const specs = g.specs || {};
+  const minSpecs = specs.minimum || specs.min || specs.minimum_requirements || specs["الحد الأدنى"];
+  const recSpecs = specs.recommended || specs.recommend || specs.recommended_requirements || specs["الموصى به"];
+  const isGrouped = minSpecs || recSpecs;
+  const renderSpecGroup = (title, values) => {
+    if (!values || typeof values !== "object") return "";
+    const rows = Object.entries(values).map(([k, v]) =>
+      `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("");
+    return rows ? `<h3>${esc(title)}</h3>${rows}` : "";
+  };
+  const flatSpecs = Object.entries(specs).filter(([k, v]) =>
+    !["minimum","min","minimum_requirements","الحد الأدنى","recommended","recommend","recommended_requirements","الموصى به"].includes(k)
+    && (typeof v !== "object" || v === null)
+  );
+  $("#gSpecs").innerHTML = isGrouped
+    ? renderSpecGroup("الحد الأدنى للتشغيل", minSpecs) + renderSpecGroup("المواصفات الموصى بها", recSpecs)
+    : flatSpecs.map(([k, v]) => `<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("");
+  if (!$("#gSpecs").innerHTML) $("#gSpecs").innerHTML = "<p>لم تتم إضافة متطلبات التشغيل لهذه اللعبة بعد.</p>";
 
   $("#gLinks").innerHTML = g.links.length
     ? g.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.name)} <span>⬇</span></a>`).join("")
@@ -846,6 +967,8 @@ function showHome(anchor) {
   $("#gameView").hidden = true;
   $("#homeView").hidden = false;
   document.title = DEFAULT_TITLE;
+  const descriptionMeta = document.querySelector('meta[name="description"]');
+  if (descriptionMeta) descriptionMeta.setAttribute("content", "موقع محمد حامد للألعاب GameX: تصفح مكتبة ألعاب الكمبيوتر، واكتشف التصنيفات وتفاصيل الألعاب ومتطلبات التشغيل.");
 
   if (!anchor || anchor === "top") {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -911,7 +1034,7 @@ $("#newsletter").onsubmit = e => {
     return;
   }
   msg.className = "newsletter-msg ok";
-  msg.textContent = "تم الاشتراك، شكراً لك!";
+  msg.textContent = "تم التحقق من البريد. يلزم ربط خدمة بريدية لتسجيل الاشتراك فعليًا.";
   e.target.reset();
 };
 
@@ -1040,6 +1163,7 @@ async function init() {
   renderBanner();
   renderCategories();
   renderGrid();
+  renderDiscovery();
   route();
 }
 
