@@ -187,33 +187,35 @@
     .badge{display:inline-block;background:var(--card2);color:var(--green);padding:3px 12px;border-radius:999px;font-size:.85rem}
 
     /* ===== صفحة اللعبة ===== */
-    #gameView{min-height:auto}
-    .game-page{width:100%;max-width:1200px;margin:0 auto;padding:16px 5% 30px}
+    #gameView{min-height:auto;width:100%}
+    .game-page{width:100%;max-width:1200px;margin:0 auto;padding:16px 16px 30px}
+    @media (min-width:900px){ .game-page{padding:16px 5% 30px} }
     .back{display:inline-block;margin-bottom:12px;color:var(--muted);cursor:pointer}
     .back:hover{color:var(--green)}
-    .game-top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:0}
-    .media{position:relative;width:100%;aspect-ratio:16/9;min-height:0;height:auto;background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+    .game-top{display:grid;grid-template-columns:1fr;gap:16px;align-items:start;margin-top:0}
+    .media{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;height:auto;min-height:0;background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
     .media video,.media img,.media iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
     .info-col{display:flex;flex-direction:column;gap:12px;min-width:0;padding-top:4px}
     .info-col h1{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.4}
     .action-row{display:flex;gap:8px;flex-wrap:wrap}
-    .action-row .btn{flex:1}
+    .action-row .btn{flex:1;min-width:0}
     .desc-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
     .desc-box h3{color:var(--green);margin-bottom:8px;font-size:1.05rem}
     .desc-box p{color:var(--text2);line-height:1.9;white-space:pre-wrap}
     .report-row{font-size:.9rem;color:var(--muted)}
 
-    .panel{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+    .panel{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;width:100%;min-width:0}
     .game-page .panel:last-child{margin-bottom:0}
     .panel h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:1.3rem}
     .panel h3{margin:24px 0 12px;font-size:1.1rem}
-    .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .spec-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media (min-width:600px){ .spec-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))} }
     .spec{background:var(--bg);padding:12px 14px;border-radius:10px;display:flex;justify-content:space-between;gap:10px}
     .spec span{color:var(--muted)}
     .links{display:flex;flex-direction:column;gap:8px}
     .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
     .links a:hover{border-color:var(--green)}
-    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 
     /* التعليقات */
     .comment-form{display:flex;flex-direction:column;gap:10px}
@@ -234,8 +236,8 @@
     .reveal{opacity:0;transform:translateY(20px);transition:.6s}
     .reveal.in{opacity:1;transform:none}
 
-    @media(max-width:900px){
-      .game-top{grid-template-columns:1fr}
+    @media(min-width:901px){
+      .game-top{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
     }
     @media(max-width:768px){
       .menu-toggle{display:block;margin-right:auto}
@@ -383,10 +385,10 @@
       <a class="back" href="#top">→ رجوع للرئيسية</a>
 
       <div class="game-top">
-        <!-- اليمين: الفيديو -->
+        <!-- الفيديو -->
         <div class="media" id="gMedia"></div>
 
-        <!-- الشمال: الزر والوصف تحته -->
+        <!-- الزر والوصف -->
         <div class="info-col">
           <span class="badge" id="gCat"></span>
           <h1 id="gTitle"></h1>
