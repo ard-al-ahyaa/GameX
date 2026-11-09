@@ -1048,6 +1048,17 @@ async function init() {
 }
 
 init();
+  /* ===== إزالة المساحات الفاضية في صفحة اللعبة ===== */
+#gameView{min-height:auto}
+.game-page{padding:16px 5% 30px}
+.game-top{align-items:start;margin-top:0}
+.media{min-height:0;height:auto}
+.info-col{gap:12px;padding-top:4px}
+.panel{margin-top:20px;padding:20px}
+.related-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.game-page .panel:last-child{margin-bottom:0}
+footer{margin-top:40px}
+body{min-height:auto}
 </script>
 </body>
 </html>
