@@ -12,7 +12,6 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.yourdomain.com/">
   <script>
-    // نطبق الثيم قبل رسم الصفحة عشان ما يحصلش وميض
     (function () {
       try {
         var t = localStorage.getItem("gx_theme");
@@ -24,7 +23,6 @@
   <style>
     [hidden]{display:none!important}
 
-    /* ===== الألوان: داكن افتراضي، وفاتح عند data-theme="light" ===== */
     :root{
       --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#262e3d;
       --text:#f0f3f8; --muted:#9aa4b5; --text2:#cfd5e0;
@@ -44,7 +42,7 @@
 
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;scroll-padding-top:80px}
-    body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;transition:background .3s,color .3s}
+    body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;min-height:100vh;transition:background .3s,color .3s}
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%;-webkit-user-drag:none}
     button,input,select,textarea{font:inherit}
@@ -173,7 +171,7 @@
 
     .notice{max-width:800px;margin:40px auto;padding:16px 20px;background:rgba(249,115,22,.1);border:1px solid var(--accent);border-radius:10px;color:var(--text2);font-size:.92rem}
 
-    footer{background:var(--card);border-top:1px solid var(--line);margin-top:60px;padding:40px 5% 20px}
+    footer{background:var(--card);border-top:1px solid var(--line);margin-top:40px;padding:40px 5% 20px}
     .footer-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
     footer h4{color:var(--green);margin-bottom:10px}
     footer ul{list-style:none}
@@ -189,15 +187,14 @@
     .badge{display:inline-block;background:var(--card2);color:var(--green);padding:3px 12px;border-radius:999px;font-size:.85rem}
 
     /* ===== صفحة اللعبة ===== */
-    .game-page{width:100%;max-width:1200px;margin:0 auto;padding:20px 5% 40px}
+    #gameView{min-height:auto}
+    .game-page{width:100%;max-width:1200px;margin:0 auto;padding:16px 5% 30px}
     .back{display:inline-block;margin-bottom:12px;color:var(--muted);cursor:pointer}
     .back:hover{color:var(--green)}
-    .game-top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:28px;align-items:start}
-    /* أول عنصر في RTL = اليمين: الفيديو */
-    .media{position:relative;width:100%;aspect-ratio:16/9;min-height:220px;background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+    .game-top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:0}
+    .media{position:relative;width:100%;aspect-ratio:16/9;min-height:0;height:auto;background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
     .media video,.media img,.media iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
-    /* الشمال: الزر والوصف */
-    .info-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+    .info-col{display:flex;flex-direction:column;gap:12px;min-width:0;padding-top:4px}
     .info-col h1{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.4}
     .action-row{display:flex;gap:8px;flex-wrap:wrap}
     .action-row .btn{flex:1}
@@ -206,7 +203,8 @@
     .desc-box p{color:var(--text2);line-height:1.9;white-space:pre-wrap}
     .report-row{font-size:.9rem;color:var(--muted)}
 
-    .panel{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+    .panel{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+    .game-page .panel:last-child{margin-bottom:0}
     .panel h2{color:var(--green);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:1.3rem}
     .panel h3{margin:24px 0 12px;font-size:1.1rem}
     .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -215,7 +213,7 @@
     .links{display:flex;flex-direction:column;gap:8px}
     .links a{background:var(--bg);border:1px solid var(--line);padding:10px 14px;border-radius:8px;display:flex;justify-content:space-between}
     .links a:hover{border-color:var(--green)}
-    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
 
     /* التعليقات */
     .comment-form{display:flex;flex-direction:column;gap:10px}
@@ -1048,17 +1046,6 @@ async function init() {
 }
 
 init();
-  /* ===== إزالة المساحات الفاضية في صفحة اللعبة ===== */
-#gameView{min-height:auto}
-.game-page{padding:16px 5% 30px}
-.game-top{align-items:start;margin-top:0}
-.media{min-height:0;height:auto}
-.info-col{gap:12px;padding-top:4px}
-.panel{margin-top:20px;padding:20px}
-.related-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.game-page .panel:last-child{margin-bottom:0}
-footer{margin-top:40px}
-body{min-height:auto}
 </script>
 </body>
 </html>
