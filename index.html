@@ -5,26 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة</title>
   <meta name="description" content="GameX موقعك لتحميل ألعاب الكمبيوتر بروابط مباشرة، فيديوهات تشويقية، وتصنيفات واضحة وتحديثات مستمرة.">
-  <meta name="theme-color" content="#0d1117">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.yourdomain.com/">
   <meta property="og:title" content="GameX | تحميل ألعاب الكمبيوتر">
   <meta property="og:description" content="روابط مباشرة لأحدث ألعاب الكمبيوتر مع فيديوهات تشويقية.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.yourdomain.com/">
+  <script>
+    // نطبق الثيم قبل رسم الصفحة عشان ما يحصلش وميض
+    (function () {
+      try {
+        var t = localStorage.getItem("gx_theme");
+        if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <style>
     [hidden]{display:none!important}
-    #gameView[hidden], #homeView[hidden]{display:none!important}
-    #gameView:not([hidden]), #homeView:not([hidden]){display:block;width:100%}
 
+    /* ===== الألوان: داكن افتراضي، وفاتح عند data-theme="light" ===== */
     :root{
       --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#262e3d;
-      --text:#f0f3f8; --muted:#9aa4b5; --green:#22c55e; --green-d:#16a34a; --accent:#f97316;
-      --radius:14px;
+      --text:#f0f3f8; --muted:#9aa4b5; --text2:#cfd5e0;
+      --green:#22c55e; --green-d:#16a34a; --on-green:#052e16;
+      --accent:#f97316; --red:#f87171;
+      --header:rgba(22,27,34,.95); --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:14px; color-scheme:dark;
     }
+    :root[data-theme="light"]{
+      --bg:#f4f6fa; --card:#ffffff; --card2:#eef2f7; --line:#dde3ec;
+      --text:#111827; --muted:#5b6472; --text2:#374151;
+      --green:#16a34a; --green-d:#15803d; --on-green:#ffffff;
+      --accent:#ea580c; --red:#dc2626;
+      --header:rgba(255,255,255,.95); --shadow:0 10px 30px rgba(15,23,42,.08);
+      color-scheme:light;
+    }
+
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;scroll-padding-top:80px}
-    body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+    body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;transition:background .3s,color .3s}
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%;-webkit-user-drag:none}
     button,input,select,textarea{font:inherit}
@@ -40,25 +60,27 @@
     @keyframes fill{to{width:100%}}
 
     #progress-bar{position:fixed;top:0;right:0;height:3px;width:0;background:var(--green);z-index:60}
-    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none;max-width:90%;text-align:center}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--card2);color:var(--text);border:1px solid var(--line);padding:12px 22px;border-radius:10px;opacity:0;transition:.3s;z-index:200;pointer-events:none;max-width:90%;text-align:center;box-shadow:var(--shadow)}
     .toast.show{opacity:1;transform:translate(-50%,0)}
 
     /* الهيدر */
-    .topbar{position:sticky;top:0;z-index:50;background:rgba(22,27,34,.95);backdrop-filter:blur(8px);display:flex;align-items:center;gap:16px;padding:12px 5%;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .topbar{position:sticky;top:0;z-index:50;background:var(--header);backdrop-filter:blur(8px);display:flex;align-items:center;gap:16px;padding:12px 5%;border-bottom:1px solid var(--line);flex-wrap:wrap}
     .logo{font-size:1.6rem;font-weight:800}
     .topbar nav{display:flex;gap:18px;margin-right:auto}
     .topbar nav a{color:var(--muted);font-size:.95rem}
     .topbar nav a:hover{color:var(--green)}
     .menu-toggle{display:none;background:none;border:0;color:var(--text);font-size:1.5rem;cursor:pointer}
-    #search{background:var(--bg);border:1px solid var(--line);color:var(--text);padding:9px 14px;border-radius:10px;width:240px}
+    #search{background:var(--card);border:1px solid var(--line);color:var(--text);padding:9px 14px;border-radius:10px;width:240px}
     #search:focus{outline:none;border-color:var(--green)}
+    .theme-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1.1rem;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
+    .theme-btn:hover{border-color:var(--green)}
 
     /* البانر */
     .banner{position:relative;margin:20px auto 0;max-width:1200px;height:min(65vh,500px);border-radius:var(--radius);overflow:hidden;background:#000}
     .banner .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s;cursor:pointer}
     .banner .slide.active{opacity:1}
     .banner .slide img{width:100%;height:100%;object-fit:cover}
-    .slide-info{position:absolute;inset:auto 0 0 0;padding:60px 30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.92));pointer-events:none}
+    .slide-info{position:absolute;inset:auto 0 0 0;padding:60px 30px 40px;background:linear-gradient(transparent,rgba(0,0,0,.92));pointer-events:none;color:#fff}
     .slide-info h2{font-size:clamp(1.4rem,4vw,2.4rem);margin-bottom:8px}
     .slide-info p{color:#d6dbe5;max-width:640px}
     .banner-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:1.6rem;cursor:pointer;z-index:3}
@@ -80,7 +102,6 @@
     .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 26px;min-width:150px}
     .stat strong{display:block;font-size:1.8rem;color:var(--green)}
     .stat span{color:var(--muted);font-size:.9rem}
-    .hero-actions{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 
     .section-title{font-size:1.6rem;margin:50px 0 6px;text-align:center;scroll-margin-top:90px}
     .section-sub{text-align:center;color:var(--muted);margin-bottom:24px}
@@ -98,13 +119,13 @@
 
     /* شبكة الألعاب */
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
-    .game-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer}
+    .game-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer;box-shadow:var(--shadow)}
     .game-card:hover{transform:translateY(-4px);border-color:var(--green)}
     .thumb{position:relative}
     .game-card img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--card2)}
     .fav{position:absolute;top:8px;left:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:1.1rem;cursor:pointer;z-index:2}
-    .fav.on{color:#f87171}
-    .play{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);border-radius:6px;padding:2px 8px;font-size:.8rem}
+    .fav.on{color:var(--red)}
+    .play{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);color:#fff;border-radius:6px;padding:2px 8px;font-size:.8rem}
     .game-card .body{padding:12px 14px 16px}
     .game-card h3{font-size:1.05rem;margin:8px 0 10px}
     .card-actions{display:flex;gap:8px}
@@ -113,7 +134,7 @@
     /* الأزرار */
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:.2s;text-decoration:none}
     .btn:disabled{opacity:.6;cursor:not-allowed}
-    .btn-green{background:var(--green);color:#052e16}
+    .btn-green{background:var(--green);color:var(--on-green)}
     .btn-green:hover{background:var(--green-d)}
     .btn-video{background:var(--card2);color:var(--text);border:1px solid var(--line)}
     .btn-video:hover{border-color:var(--green)}
@@ -128,7 +149,7 @@
     /* الخطوات والمميزات */
     .steps{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
     .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center}
-    .step-num{display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:#052e16;font-weight:800;margin-bottom:10px}
+    .step-num{display:inline-flex;width:40px;height:40px;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:var(--on-green);font-weight:800;margin-bottom:10px}
     .step h3{font-size:1rem;margin-bottom:6px}
     .step p{color:var(--muted);font-size:.92rem}
     .features{max-width:1000px;margin:0 auto;padding:0 5%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
@@ -143,14 +164,14 @@
     .newsletter input{flex:1;min-width:220px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
     .newsletter-msg{margin-top:12px;min-height:22px;font-size:.92rem}
     .newsletter-msg.ok{color:var(--green)}
-    .newsletter-msg.err{color:#f87171}
+    .newsletter-msg.err{color:var(--red)}
 
     .faq{max-width:800px;margin:0 auto;padding:0 5%}
     details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
     summary{cursor:pointer;font-weight:700}
     details p{color:var(--muted);margin-top:8px}
 
-    .notice{max-width:800px;margin:40px auto;padding:16px 20px;background:rgba(249,115,22,.1);border:1px solid var(--accent);border-radius:10px;color:#fed7aa;font-size:.92rem}
+    .notice{max-width:800px;margin:40px auto;padding:16px 20px;background:rgba(249,115,22,.1);border:1px solid var(--accent);border-radius:10px;color:var(--text2);font-size:.92rem}
 
     footer{background:var(--card);border-top:1px solid var(--line);margin-top:60px;padding:40px 5% 20px}
     .footer-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
@@ -162,27 +183,27 @@
     footer p{color:var(--muted);font-size:.92rem}
     .footer-bottom{text-align:center;color:var(--muted);font-size:.85rem;margin-top:30px;padding-top:16px;border-top:1px solid var(--line)}
 
-    .to-top{position:fixed;bottom:22px;left:22px;width:46px;height:46px;border-radius:50%;border:0;background:var(--green);color:#052e16;font-size:1.3rem;font-weight:800;cursor:pointer;opacity:0;pointer-events:none;transition:.3s;z-index:40}
+    .to-top{position:fixed;bottom:22px;left:22px;width:46px;height:46px;border-radius:50%;border:0;background:var(--green);color:var(--on-green);font-size:1.3rem;font-weight:800;cursor:pointer;opacity:0;pointer-events:none;transition:.3s;z-index:40}
     .to-top.show{opacity:1;pointer-events:auto}
 
     .badge{display:inline-block;background:var(--card2);color:var(--green);padding:3px 12px;border-radius:999px;font-size:.85rem}
 
     /* ===== صفحة اللعبة ===== */
     .game-page{width:100%;max-width:1200px;margin:0 auto;padding:20px 5% 40px}
-    .back{display:inline-block;margin-bottom:6px;color:var(--muted);cursor:pointer}
+    .back{display:inline-block;margin-bottom:12px;color:var(--muted);cursor:pointer}
     .back:hover{color:var(--green)}
-    .game-top{display:grid;grid-template-columns:1.7fr 1fr;gap:28px;align-items:start}
-    /* أول عنصر في RTL = اليمين: الفيديو الكبير */
-    .media{width:100%;background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;border:1px solid var(--line)}
-    .media video,.media img,.media iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;background:#000}
-    /* التاني = الشمال: الزر والوصف تحته */
+    .game-top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:28px;align-items:start}
+    /* أول عنصر في RTL = اليمين: الفيديو */
+    .media{position:relative;width:100%;aspect-ratio:16/9;min-height:220px;background:#000;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+    .media video,.media img,.media iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block}
+    /* الشمال: الزر والوصف */
     .info-col{display:flex;flex-direction:column;gap:14px;min-width:0}
     .info-col h1{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.4}
     .action-row{display:flex;gap:8px;flex-wrap:wrap}
     .action-row .btn{flex:1}
     .desc-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
     .desc-box h3{color:var(--green);margin-bottom:8px;font-size:1.05rem}
-    .desc-box p{color:#cfd5e0;line-height:1.9;white-space:pre-wrap}
+    .desc-box p{color:var(--text2);line-height:1.9;white-space:pre-wrap}
     .report-row{font-size:.9rem;color:var(--muted)}
 
     .panel{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
@@ -205,12 +226,12 @@
     .count{color:var(--muted);font-size:.85rem}
     .cmsg{margin:12px 0;min-height:22px;font-size:.92rem}
     .cmsg.ok{color:var(--green)}
-    .cmsg.err{color:#f87171}
+    .cmsg.err{color:var(--red)}
     .comment-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
     .comment-item{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
     .cmt-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
     .cmt-head small{color:var(--muted)}
-    .comment-item p{color:#cfd5e0;white-space:pre-wrap;word-break:break-word}
+    .comment-item p{color:var(--text2);white-space:pre-wrap;word-break:break-word}
 
     .reveal{opacity:0;transform:translateY(20px);transition:.6s}
     .reveal.in{opacity:1;transform:none}
@@ -250,6 +271,7 @@
       <a href="#faq">الأسئلة الشائعة</a>
     </nav>
     <input id="search" type="search" placeholder="ابحث عن لعبة..." autocomplete="off" aria-label="بحث">
+    <button class="theme-btn" id="themeBtn" aria-label="تغيير الوضع">🌙</button>
   </header>
 
   <!-- ===== الصفحة الرئيسية ===== -->
@@ -265,15 +287,11 @@
 
     <section class="hero" id="top">
       <h1>حمّل أحدث ألعاب الكمبيوتر <span>بسرعة</span></h1>
-      <p>روابط مباشرة، فيديوهات تشويقية قبل التحميل، وتحديثات مستمرة.</p>
+      <p>روابط مباشرة، وتفاصيل كاملة وفيديو تشويقي لكل لعبة، وتحديثات مستمرة.</p>
       <div class="stats">
         <div class="stat"><strong id="statGames">0</strong><span>لعبة متاحة</span></div>
         <div class="stat"><strong id="statCats">0</strong><span>تصنيف</span></div>
         <div class="stat"><strong id="statLinks">0</strong><span>رابط تحميل</span></div>
-        <div class="stat"><strong id="statVideos">0</strong><span>فيديو تشويقي</span></div>
-      </div>
-      <div class="hero-actions">
-        <button class="btn btn-ghost" id="randomBtn">🎲 لعبة عشوائية</button>
       </div>
     </section>
 
@@ -367,7 +385,7 @@
       <a class="back" href="#top">→ رجوع للرئيسية</a>
 
       <div class="game-top">
-        <!-- اليمين: الفيديو الكبير -->
+        <!-- اليمين: الفيديو -->
         <div class="media" id="gMedia"></div>
 
         <!-- الشمال: الزر والوصف تحته -->
@@ -458,8 +476,8 @@
 /* ============ الإعدادات ============ */
 const SUPABASE_URL = "https://mnrjvnxwnzkowcshkfxi.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rtb9E8Hgri0_ttS2M9TaTg_KwSWy4ff";
-const BUCKET = "games";          // bucket الصور
-const VIDEO_BUCKET = "videos";   // bucket الفيديوهات
+const BUCKET = "games";
+const VIDEO_BUCKET = "videos";
 const SLIDE_MS = 5000;
 const COMMENT_COOLDOWN_MS = 30000;
 const DEFAULT_TITLE = "GameX | تحميل ألعاب الكمبيوتر مجانًا بروابط مباشرة";
@@ -490,8 +508,16 @@ function resolveUrl(v, bucket = BUCKET) {
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${encodeURI(path)}`;
 }
 
+// الجزء الظاهر من الصورة (من لوحة التحكم)
+function imgStyle(g) {
+  const [x, y] = String(g.imgPos || "50,50").split(",").map(Number);
+  const px = isNaN(x) ? 50 : x, py = isNaN(y) ? 50 : y;
+  const z = Number(g.imgZoom) || 100;
+  return `object-position:${px}% ${py}%;transform:scale(${z / 100});transform-origin:${px}% ${py}%`;
+}
+
 function embedUrl(u) {
-  const yt = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
+  const yt = u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([\w-]{11})/);
   if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
   const vm = u.match(/vimeo\.com\/(\d+)/);
   if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
@@ -514,6 +540,19 @@ document.addEventListener("error", e => {
   const t = e.target;
   if (t.tagName === "IMG" && t.src !== FALLBACK_IMG) t.src = FALLBACK_IMG;
 }, true);
+
+/* ============ الثيم (داكن / فاتح) ============ */
+function currentTheme() {
+  return document.documentElement.getAttribute("data-theme") || "dark";
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute("data-theme", t);
+  $("#themeBtn").textContent = t === "light" ? "🌙" : "☀️";
+  $("#themeBtn").setAttribute("aria-label", t === "light" ? "تفعيل الوضع الداكن" : "تفعيل الوضع الفاتح");
+  store.set("gx_theme", t);
+}
+$("#themeBtn").onclick = () => applyTheme(currentTheme() === "light" ? "dark" : "light");
+applyTheme(currentTheme());
 
 /* ============ الحالة ============ */
 const state = {
@@ -552,6 +591,8 @@ function normalize(g) {
     title: g.title || g.name || "بدون اسم",
     cat: g.cat || g.category || "عام",
     img: resolveUrl(g.img || g.image || g.cover || g.poster),
+    imgPos: g.imgPos || "50,50",
+    imgZoom: g.imgZoom || 100,
     video: String(g.video || g.videoUrl || g.video_url || g.trailer || "").trim(),
     desc: g.desc || g.description || g.details || g.about || g.summary || "",
     comment: g.comment || g.short || "",
@@ -584,7 +625,6 @@ function renderStats() {
   $("#statGames").textContent = state.games.length;
   $("#statCats").textContent = new Set(state.games.map(g => g.cat)).size;
   $("#statLinks").textContent = state.games.reduce((n, g) => n + g.links.length, 0);
-  $("#statVideos").textContent = state.games.filter(g => g.video).length;
 }
 
 /* ============ البانر ============ */
@@ -599,7 +639,7 @@ function renderBanner() {
   $("#banner").hidden = false;
   $("#slides").innerHTML = state.banner.map((g, i) => `
     <div class="slide${i === 0 ? " active" : ""}" data-open="${esc(g.id)}">
-      <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}">
+      <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}" style="${imgStyle(g)}">
       <div class="slide-info">
         <h2>${esc(g.title)}</h2>
         <p>${esc(g.comment || g.desc)}</p>
@@ -651,7 +691,7 @@ function cardHTML(g) {
   return `
     <article class="game-card reveal" data-open="${esc(g.id)}">
       <div class="thumb">
-        <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}" loading="lazy">
+        <img src="${esc(g.img || FALLBACK_IMG)}" alt="${esc(g.title)}" loading="lazy" style="${imgStyle(g)}">
         <button class="fav${isFav ? " on" : ""}" data-fav="${esc(g.id)}" aria-label="إضافة للمفضلة">${isFav ? "♥" : "♡"}</button>
         ${g.video ? '<span class="play">▶ فيديو</span>' : ""}
       </div>
@@ -682,14 +722,14 @@ $("#search").oninput = e => {
   renderGrid();
 };
 
-/* ============ الفيديو (كبير على اليمين) ============ */
+/* ============ الفيديو (داخل صفحة اللعبة) ============ */
 function renderMedia(g) {
   const media = $("#gMedia");
   const poster = g.img || FALLBACK_IMG;
   media.innerHTML = "";
 
   if (!g.video) {
-    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
+    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}" style="${imgStyle(g)}">`;
     return;
   }
 
@@ -702,7 +742,7 @@ function renderMedia(g) {
   const src = resolveUrl(g.video, VIDEO_BUCKET);
   media.innerHTML = `<video src="${esc(src)}" poster="${esc(poster)}" controls controlsList="nodownload" playsinline preload="metadata"></video>`;
   media.querySelector("video").addEventListener("error", () => {
-    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}">`;
+    media.innerHTML = `<img src="${esc(poster)}" alt="${esc(g.title)}" style="${imgStyle(g)}">`;
     toast("تعذّر تشغيل الفيديو");
   });
 }
@@ -856,12 +896,6 @@ document.addEventListener("click", e => {
     return;
   }
 
-  if (t.closest("#randomBtn")) {
-    if (!state.games.length) return toast("مفيش ألعاب متاحة حالياً");
-    openGame(state.games[Math.floor(Math.random() * state.games.length)].id);
-    return;
-  }
-
   if (t.closest("#gFav")) { if (state.current) toggleFav(state.current.id); return; }
   if (t.closest("#gShare")) { shareGame(); return; }
 
@@ -963,7 +997,7 @@ $("#cBody").addEventListener("input", e => {
 
 $("#commentForm").onsubmit = async e => {
   e.preventDefault();
-  if ($("#cHoney").value) return; // بوت
+  if ($("#cHoney").value) return;
 
   const name = $("#cName").value.trim();
   const body = $("#cBody").value.trim();
